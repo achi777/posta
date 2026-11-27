@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Posta.App/Posta.App.csproj" />
+    <Project Path="src/Posta.Core/Posta.Core.csproj" />
+    <Project Path="src/Posta.Exchange/Posta.Exchange.csproj" />
+    <Project Path="src/Posta.Outlook/Posta.Outlook.csproj" />
+    <Project Path="src/Posta.Mapi/Posta.Mapi.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/Posta.MapiProbe/Posta.MapiProbe.csproj" />
+    <Project Path="tools/Posta.MapiVerify/Posta.MapiVerify.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Posta.Mapi.Tests/Posta.Mapi.Tests.csproj" />
+  </Folder>
+</Solution>

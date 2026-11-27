@@ -1,0 +1,161 @@
+<Fluent:RibbonWindow x:Class="Posta.App.Windows.AppointmentWindow"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:Fluent="urn:fluent-ribbon"
+                     xmlns:ui="clr-namespace:Posta.App.Infrastructure"
+                     xmlns:c="clr-namespace:Posta.App.Controls"
+                     Width="1260" Height="800" MinWidth="700" MinHeight="480"
+                     FontFamily="Segoe UI, Sylfaen" FontSize="12" UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+                     WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Fluent:Ribbon x:Name="Ribbon" CanCustomizeRibbon="False" CanCustomizeQuickAccessToolBar="False">
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage Header="{ui:Loc File}">
+                    <Fluent:BackstageTabControl>
+                        <Fluent:Button Header="{ui:Loc SaveClose}" Click="SaveClose_Click" />
+                        <Fluent:Button Header="{ui:Loc Print}" Click="Print_Click" />
+                        <Fluent:Button Header="{ui:Loc Close}" Click="Close_Click" />
+                    </Fluent:BackstageTabControl>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+            <Fluent:RibbonTabItem x:Name="MainTab" Header="{ui:Loc Appointment}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpActionsAppt}">
+                    <Fluent:Button x:Name="SaveCloseBtn" Header="{ui:Loc SaveClose}" LargeIcon="{ui:Glyph E74E, Color=#7719AA}" SizeDefinition="Large" Click="SaveClose_Click" />
+                    <Fluent:Button x:Name="DeleteBtn" Header="{ui:Loc Delete}" LargeIcon="{ui:Glyph E74D, Color=#424242}" SizeDefinition="Large" Click="Delete_Click" />
+                    <Fluent:Button x:Name="ForwardBtn" Header="{ui:Loc Forward}" Icon="{ui:Glyph E89C, Size=16, Color=#0F6CBD}" SizeDefinition="Middle" Click="Forward_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="RespondGroup" Header="{ui:Loc GrpRespond}" Visibility="Collapsed">
+                    <Fluent:Button Header="{ui:Loc Accept}" LargeIcon="{ui:Glyph E8FB, Color=#107C10}" SizeDefinition="Large" Click="Respond_Click" Tag="Accept" />
+                    <Fluent:Button Header="{ui:Loc Tentative}" LargeIcon="{ui:Glyph E9CE, Color=#5C2E91}" SizeDefinition="Large" Click="Respond_Click" Tag="Tentative" />
+                    <Fluent:Button Header="{ui:Loc Decline}" LargeIcon="{ui:Glyph E711, Color=#C4314B}" SizeDefinition="Large" Click="Respond_Click" Tag="Decline" />
+                    <Fluent:Button Header="{ui:Loc Reply}" Icon="{ui:Glyph E8CA, Size=16, Color=#5C2E91}" SizeDefinition="Middle" Click="ReplyOrganizer_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpShowAppt}">
+                    <Fluent:ToggleButton x:Name="ShowApptBtn" GroupName="show" Header="{ui:Loc Appointment}" LargeIcon="{ui:Glyph E787, Color=#0F6CBD}" SizeDefinition="Large" IsChecked="True" Click="ShowAppt_Click" />
+                    <Fluent:ToggleButton x:Name="ShowSchedBtn" GroupName="show" Header="{ui:Loc SchedulingAssistant}" LargeIcon="{ui:Glyph E716, Color=#0F6CBD}" SizeDefinition="Large" Click="ShowSched_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="AttendeesGroup" Header="{ui:Loc GrpAttendees}">
+                    <Fluent:Button x:Name="InviteBtn" Header="{ui:Loc InviteAttendees}" LargeIcon="{ui:Glyph E8FA, Color=#0F6CBD}" SizeDefinition="Large" Click="Invite_Click" />
+                    <Fluent:Button x:Name="CancelInviteBtn" Header="{ui:Loc CancelInvitation}" Icon="{ui:Glyph E711, Size=16}" SizeDefinition="Middle" Click="CancelInvite_Click" Visibility="Collapsed" />
+                    <Fluent:DropDownButton x:Name="ResponseOptionsBtn" Header="{ui:Loc ResponseOptions}" Icon="{ui:Glyph E8BD, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem x:Name="RequestResponsesItem" Header="{ui:Loc RequestResponses}" IsCheckable="True" IsChecked="True" />
+                        <Fluent:MenuItem x:Name="AllowProposeItem" Header="{ui:Loc AllowProposeNewTime}" IsCheckable="True" IsChecked="True" />
+                    </Fluent:DropDownButton>
+                    <Fluent:Button Header="{ui:Loc AddressBook}" Icon="{ui:Glyph E779, Size=16}" SizeDefinition="Middle" Click="AddressBook_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpOptionsAppt}">
+                    <Fluent:ComboBox x:Name="ShowAsBox" Header="{ui:Loc ShowAs}" Width="200" IsEditable="False" />
+                    <Fluent:ComboBox x:Name="ReminderBox" Header="{ui:Loc Reminder}" Width="200" IsEditable="False" />
+                    <Fluent:Button x:Name="RecurrenceBtn" Header="{ui:Loc MakeRecurring}" LargeIcon="{ui:Glyph E8EE, Color=#424242}" SizeDefinition="Large" Click="Recurrence_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpTagsAppt}">
+                    <Fluent:DropDownButton x:Name="CategorizeBtn" Header="{ui:Loc Categorize}" Icon="{ui:Glyph E8EC, Size=16, Color=#C4314B}" SizeDefinition="Middle" DropDownOpened="Categorize_Opened" />
+                    <Fluent:ToggleButton x:Name="PrivateBtn" Header="{ui:Loc Private}" Icon="{ui:Glyph E72E, Size=16}" SizeDefinition="Middle" />
+                    <Fluent:ToggleButton x:Name="HighImpBtn" Header="{ui:Loc HighImportance}" Icon="{ui:Glyph E8C9, Size=16, Color=#C4314B}" SizeDefinition="Middle" Click="Importance_Click" Tag="High" />
+                    <Fluent:ToggleButton x:Name="LowImpBtn" Header="{ui:Loc LowImportance}" Icon="{ui:Glyph E74B, Size=16, Color=#0F6CBD}" SizeDefinition="Middle" Click="Importance_Click" Tag="Low" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="{ui:Loc Insert}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpInclude}">
+                    <Fluent:Button Header="{ui:Loc AttachFile}" LargeIcon="{ui:Glyph E723, Color=#424242}" SizeDefinition="Large" Click="AttachFile_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpTables}">
+                    <Fluent:Button Header="{ui:Loc Table}" LargeIcon="{ui:Glyph E8A9, Color=#424242}" SizeDefinition="Large" Click="Table_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpLinks}">
+                    <Fluent:Button Header="{ui:Loc Link}" LargeIcon="{ui:Glyph E71B, Color=#0F6CBD}" SizeDefinition="Large" Click="Link_Click" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+            <Fluent:RibbonTabItem Header="{ui:Loc FormatText}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpFont}">
+                    <Fluent:Button ToolTip="{ui:Loc Bold}" Icon="{ui:Glyph E8DD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="bold" />
+                    <Fluent:Button ToolTip="{ui:Loc Italic}" Icon="{ui:Glyph E8DB, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="italic" />
+                    <Fluent:Button ToolTip="{ui:Loc UnderlineTip}" Icon="{ui:Glyph E8DC, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="underline" />
+                    <Fluent:Button ToolTip="{ui:Loc Bullets}" Icon="{ui:Glyph E8FD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="insertUnorderedList" />
+                    <Fluent:Button ToolTip="{ui:Loc Numbering}" Icon="{ui:Glyph E9D5, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="insertOrderedList" />
+                    <Fluent:Button ToolTip="{ui:Loc ClearFormatting}" Icon="{ui:Glyph E894, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="removeFormat" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+
+        <Border x:Name="InfoBar" Grid.Row="1" Background="{StaticResource InfoBarBrush}" Padding="12,5" Visibility="Collapsed">
+            <TextBlock x:Name="InfoText" TextWrapping="Wrap" />
+        </Border>
+
+        <!-- Appointment page -->
+        <Grid x:Name="ApptPage" Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Margin="10,10,14,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Button x:Name="SendButton" Grid.RowSpan="3" Width="72" Height="72" Margin="0,0,10,0" VerticalAlignment="Top" Style="{StaticResource FlatButton}" BorderBrush="#C8C6C4" Click="Send_Click" Visibility="Collapsed">
+                    <StackPanel>
+                        <TextBlock Text="&#xE724;" FontFamily="{StaticResource IconFont}" FontSize="26" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" />
+                        <TextBlock x:Name="SendText" Text="{ui:Loc Send}" HorizontalAlignment="Center" Margin="0,4,0,0" TextWrapping="Wrap" TextAlignment="Center" />
+                    </StackPanel>
+                </Button>
+
+                <TextBlock Grid.Column="1" Text="{ui:Loc Title}" VerticalAlignment="Center" Margin="0,0,10,6" />
+                <TextBox x:Name="TitleBox" Grid.Column="2" Height="26" VerticalContentAlignment="Center" BorderThickness="0,0,0,1" BorderBrush="#C8C6C4" Margin="0,0,0,6" TextChanged="TitleBox_TextChanged" />
+
+                <Button x:Name="RequiredBtn" Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogButton}" MinWidth="90" Margin="0,0,10,4" Content="{ui:Loc Required}" Click="AddressBook_Click" />
+                <c:RecipientBox x:Name="RequiredBox" Grid.Row="1" Grid.Column="2" Margin="0,0,0,4" />
+                <Button x:Name="OptionalBtn" Grid.Row="2" Grid.Column="1" Style="{StaticResource DialogButton}" MinWidth="90" Margin="0,0,10,4" Content="{ui:Loc Optional}" Click="AddressBook_Click" />
+                <c:RecipientBox x:Name="OptionalBox" Grid.Row="2" Grid.Column="2" Margin="0,0,0,4" />
+
+                <TextBlock Grid.Row="3" Grid.Column="1" Text="{ui:Loc StartTime}" VerticalAlignment="Center" Margin="0,4,10,4" />
+                <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Horizontal" Margin="0,4,0,4">
+                    <DatePicker x:Name="StartDate" Width="150" SelectedDateChanged="StartDate_Changed" />
+                    <ComboBox x:Name="StartTime" Width="90" Margin="6,0,0,0" IsEditable="True" LostFocus="StartTime_Changed" SelectionChanged="StartTime_SelectionChanged" />
+                    <CheckBox x:Name="AllDayBox" Content="{ui:Loc AllDayEvent}" Margin="14,0,0,0" VerticalAlignment="Center" Checked="AllDay_Changed" Unchecked="AllDay_Changed" />
+                </StackPanel>
+                <TextBlock Grid.Row="4" Grid.Column="1" Text="{ui:Loc EndTime}" VerticalAlignment="Center" Margin="0,0,10,4" />
+                <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal" Margin="0,0,0,4">
+                    <DatePicker x:Name="EndDate" Width="150" />
+                    <ComboBox x:Name="EndTime" Width="90" Margin="6,0,0,0" IsEditable="True" />
+                    <Button x:Name="RecurrenceLink" Style="{StaticResource FlatButton}" Margin="14,0,0,0" Click="Recurrence_Click" Padding="6,2">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xE8EE;" FontFamily="{StaticResource IconFont}" FontSize="12" VerticalAlignment="Center" />
+                            <TextBlock Text="{ui:Loc MakeRecurring}" Margin="6,0,0,0" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <TextBlock x:Name="RecurrenceText" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Foreground="#605E5C" Margin="0,0,0,4" TextWrapping="Wrap" Visibility="Collapsed" />
+                <TextBlock Grid.Row="6" Grid.Column="1" Text="{ui:Loc Location}" VerticalAlignment="Center" Margin="0,0,10,4" />
+                <TextBox x:Name="LocationBox" Grid.Row="6" Grid.Column="2" Height="26" VerticalContentAlignment="Center" BorderThickness="0,0,0,1" BorderBrush="#C8C6C4" Margin="0,0,0,4" />
+                <ItemsControl x:Name="AttachmentsList" Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate><WrapPanel /></ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+            <Border Grid.Row="1" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0">
+                <c:HtmlEditor x:Name="Editor" />
+            </Border>
+        </Grid>
+
+        <!-- Scheduling assistant page -->
+        <c:SchedulingAssistant x:Name="Scheduler" Grid.Row="2" Visibility="Collapsed" />
+    </Grid>
+</Fluent:RibbonWindow>

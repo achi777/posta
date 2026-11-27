@@ -1,0 +1,582 @@
+<Fluent:RibbonWindow x:Class="Posta.App.MainWindow"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:Fluent="urn:fluent-ribbon"
+                     xmlns:ui="clr-namespace:Posta.App.Infrastructure"
+                     xmlns:v="clr-namespace:Posta.App.Views"
+                     Title="Posta" Width="1400" Height="860" MinWidth="900" MinHeight="560"
+                     FontFamily="Segoe UI, Sylfaen" FontSize="12"
+                     UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+                     WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- ================================================================== RIBBON -->
+        <Fluent:Ribbon x:Name="Ribbon" AutomaticStateManagement="True" CanCustomizeRibbon="False" CanCustomizeQuickAccessToolBar="False" IsQuickAccessToolBarVisible="True">
+
+            <Fluent:Ribbon.QuickAccessItems>
+                <Fluent:QuickAccessMenuItem IsChecked="True">
+                    <Fluent:Button Header="{ui:Loc SendReceiveAll}" Icon="{ui:Glyph E895, Size=16, Color=#FFFFFF}" Click="SendReceive_Click" />
+                </Fluent:QuickAccessMenuItem>
+                <Fluent:QuickAccessMenuItem IsChecked="True">
+                    <Fluent:Button Header="{ui:Loc Undo}" Icon="{ui:Glyph E7A7, Size=16, Color=#FFFFFF}" IsEnabled="False" />
+                </Fluent:QuickAccessMenuItem>
+            </Fluent:Ribbon.QuickAccessItems>
+
+            <Fluent:Ribbon.ToolBarItems>
+                <TextBox x:Name="TellMeBox" Width="260" Height="22" Margin="0,0,8,0" Style="{StaticResource SearchBox}" KeyDown="TellMeBox_KeyDown" />
+            </Fluent:Ribbon.ToolBarItems>
+
+            <!-- ======================================== FILE (Backstage) -->
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage x:Name="Backstage" Header="{ui:Loc File}">
+                    <Fluent:BackstageTabControl x:Name="BackstageTabs">
+                        <Fluent:BackstageTabItem Header="{ui:Loc Info}">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <StackPanel Margin="40,26,40,30" MaxWidth="900" HorizontalAlignment="Left">
+                                    <TextBlock Text="{ui:Loc AccountInformation}" FontSize="32" FontWeight="Light" Foreground="#252423" />
+                                    <StackPanel Orientation="Horizontal" Margin="0,22,0,6">
+                                        <ComboBox x:Name="BackstageAccountBox" Width="430" Height="40" VerticalContentAlignment="Center" FontSize="13" SelectionChanged="BackstageAccountBox_SelectionChanged" />
+                                    </StackPanel>
+                                    <Button Style="{StaticResource FlatButton}" HorizontalAlignment="Left" Click="AddAccount_Click" Padding="10,6">
+                                        <TextBlock Text="{ui:Loc AddAccount}" FontSize="13" />
+                                    </Button>
+                                    <Rectangle Height="1" Fill="#E1DFDD" Margin="0,16,0,6" />
+
+                                    <!-- Account settings -->
+                                    <Grid Margin="0,10">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="110" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource FlatButton}" Width="96" Height="96" BorderBrush="#C8C6C4" Click="AccountSettings_Click" VerticalAlignment="Top">
+                                            <StackPanel>
+                                                <Image Source="{ui:Glyph E910, Size=40, Color=#0F6CBD, Badge=E713, BadgeColor=#424242}" Width="36" Height="36" />
+                                                <TextBlock Text="{ui:Loc AccountSettings}" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0" FontSize="11.5" />
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel Grid.Column="1" Margin="12,4,0,0">
+                                            <TextBlock Text="{ui:Loc AccountSettings}" FontSize="17" Foreground="#252423" />
+                                            <TextBlock Text="{ui:Loc AccountSettingsDesc}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#605E5C" />
+                                            <TextBlock x:Name="BackstageServerInfo" Margin="0,8,0,0" Foreground="#605E5C" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Rectangle Height="1" Fill="#EDEBE9" />
+                                    <!-- Automatic replies -->
+                                    <Grid Margin="0,10">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="110" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource FlatButton}" Width="96" Height="96" BorderBrush="#C8C6C4" Click="AutoReplies_Click" VerticalAlignment="Top">
+                                            <StackPanel>
+                                                <Image Source="{ui:Glyph E715, Size=40, Color=#0F6CBD, Badge=E823, BadgeColor=#C4314B}" Width="36" Height="36" />
+                                                <TextBlock Text="{ui:Loc AutomaticReplies}" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0" FontSize="11.5" />
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel Grid.Column="1" Margin="12,4,0,0">
+                                            <TextBlock Text="{ui:Loc AutomaticReplies}" FontSize="17" Foreground="#252423" />
+                                            <TextBlock Text="{ui:Loc AutomaticRepliesDesc}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#605E5C" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Rectangle Height="1" Fill="#EDEBE9" />
+                                    <!-- Mailbox settings -->
+                                    <Grid Margin="0,10">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="110" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <Button x:Name="CleanupToolsButton" Style="{StaticResource FlatButton}" Width="96" Height="96" BorderBrush="#C8C6C4" Click="CleanupTools_Click" VerticalAlignment="Top">
+                                            <StackPanel>
+                                                <Image Source="{ui:Glyph E894, Size=40, Color=#424242}" Width="36" Height="36" />
+                                                <TextBlock Text="{ui:Loc CleanupTools}" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0" FontSize="11.5" />
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel Grid.Column="1" Margin="12,4,0,0">
+                                            <TextBlock Text="{ui:Loc MailboxSettings}" FontSize="17" Foreground="#252423" />
+                                            <TextBlock Text="{ui:Loc MailboxSettingsDesc}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#605E5C" />
+                                        </StackPanel>
+                                    </Grid>
+                                    <Rectangle Height="1" Fill="#EDEBE9" />
+                                    <!-- Rules -->
+                                    <Grid Margin="0,10">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="110" /><ColumnDefinition Width="*" /></Grid.ColumnDefinitions>
+                                        <Button Style="{StaticResource FlatButton}" Width="96" Height="96" BorderBrush="#C8C6C4" Click="Rules_Click" VerticalAlignment="Top">
+                                            <StackPanel>
+                                                <Image Source="{ui:Glyph E8CB, Size=40, Color=#0F6CBD}" Width="36" Height="36" />
+                                                <TextBlock Text="{ui:Loc ManageRulesAlerts}" TextWrapping="Wrap" TextAlignment="Center" Margin="0,6,0,0" FontSize="11.5" />
+                                            </StackPanel>
+                                        </Button>
+                                        <StackPanel Grid.Column="1" Margin="12,4,0,0">
+                                            <TextBlock Text="{ui:Loc RulesAlerts}" FontSize="17" Foreground="#252423" />
+                                            <TextBlock Text="{ui:Loc RulesAlertsDesc}" TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#605E5C" />
+                                        </StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Fluent:BackstageTabItem>
+
+                        <Fluent:BackstageTabItem Header="{ui:Loc OpenExport}">
+                            <StackPanel Margin="40,26,40,30" HorizontalAlignment="Left" Width="640">
+                                <TextBlock Text="{ui:Loc OpenExport}" FontSize="32" FontWeight="Light" Margin="0,0,0,20" />
+                                <Button Style="{StaticResource FlatButton}" HorizontalContentAlignment="Left" Padding="10" Click="OpenSharedCalendar_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{ui:Glyph E787, Size=32, Color=#0F6CBD}" Width="30" Height="30" Margin="0,0,14,0" />
+                                        <StackPanel>
+                                            <TextBlock Text="{ui:Loc OpenCalendar}" FontSize="14" />
+                                            <TextBlock Text="{ui:Loc OpenCalendarDesc}" Foreground="#605E5C" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Button>
+                                <Button Style="{StaticResource FlatButton}" HorizontalContentAlignment="Left" Padding="10" Margin="0,6,0,0" Click="OpenOtherUsersFolder_Click">
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{ui:Glyph E8B7, Size=32, Color=#C19C00, Badge=E77B, BadgeColor=#0F6CBD}" Width="30" Height="30" Margin="0,0,14,0" />
+                                        <StackPanel>
+                                            <TextBlock Text="{ui:Loc OtherUsersFolder}" FontSize="14" />
+                                            <TextBlock Text="{ui:Loc OtherUsersFolderDesc}" Foreground="#605E5C" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Fluent:BackstageTabItem>
+
+                        <Fluent:Button Header="{ui:Loc SaveAs}" Click="SaveAs_Click" />
+                        <Fluent:Button Header="{ui:Loc SaveAttachments}" Click="SaveAttachments_Click" />
+
+                        <Fluent:BackstageTabItem Header="{ui:Loc Print}">
+                            <StackPanel Margin="40,26,40,30" HorizontalAlignment="Left">
+                                <TextBlock Text="{ui:Loc Print}" FontSize="32" FontWeight="Light" Margin="0,0,0,20" />
+                                <Button Style="{StaticResource FlatButton}" Width="96" Height="96" BorderBrush="#C8C6C4" HorizontalAlignment="Left" Click="Print_Click">
+                                    <StackPanel>
+                                        <Image Source="{ui:Glyph E749, Size=40, Color=#424242}" Width="36" Height="36" />
+                                        <TextBlock Text="{ui:Loc Print}" HorizontalAlignment="Center" Margin="0,6,0,0" />
+                                    </StackPanel>
+                                </Button>
+                            </StackPanel>
+                        </Fluent:BackstageTabItem>
+
+                        <Fluent:SeparatorTabItem />
+
+                        <Fluent:BackstageTabItem x:Name="AboutTab" Header="{ui:Loc OfficeAccount}">
+                            <StackPanel Margin="40,26,40,30" HorizontalAlignment="Left" Width="640">
+                                <TextBlock Text="{ui:Loc OfficeAccount}" FontSize="32" FontWeight="Light" Margin="0,0,0,20" />
+                                <TextBlock x:Name="AboutUser" FontSize="14" />
+                                <TextBlock x:Name="AboutEmail" Foreground="#605E5C" Margin="0,2,0,16" />
+                                <TextBlock Text="{ui:Loc AboutApp}" FontSize="17" Margin="0,8,0,8" />
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <Image Source="pack://application:,,,/Assets/posta-256.png" Width="56" Height="56" Margin="0,0,14,0" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <StackPanel VerticalAlignment="Center">
+                                        <TextBlock Text="{ui:Loc AppName}" FontSize="20" FontWeight="SemiBold" />
+                                        <TextBlock FontSize="13" Margin="0,2,0,0"><Run Text="{ui:Loc Author}" /><Run Text=": " /><Run Text="Archil Odishelidze" FontWeight="SemiBold" /></TextBlock>
+                                    </StackPanel>
+                                </StackPanel>
+                                <TextBlock Text="{ui:Loc AboutText}" Foreground="#605E5C" TextWrapping="Wrap" />
+                                <TextBlock Text="© 2026 Archil Odishelidze" Foreground="#605E5C" Margin="0,4,0,0" />
+                                <TextBlock x:Name="AboutVersion" Foreground="#605E5C" Margin="0,4,0,0" />
+                                <TextBlock x:Name="AboutServer" Foreground="#605E5C" Margin="0,2,0,16" />
+                                <TextBlock Text="{ui:Loc Shortcuts}" FontSize="17" Margin="0,8,0,4" />
+                                <TextBlock Text="{ui:Loc ShortcutsText}" Foreground="#605E5C" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Fluent:BackstageTabItem>
+                        <Fluent:Button Header="{ui:Loc Options}" Click="Options_Click" />
+                        <Fluent:Button Header="{ui:Loc Exit}" Click="Exit_Click" />
+                    </Fluent:BackstageTabControl>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+
+            <!-- ======================================== HOME -->
+            <Fluent:RibbonTabItem x:Name="HomeTab" Header="{ui:Loc Home}">
+
+                <!-- ===== Mail: New ===== -->
+                <Fluent:RibbonGroupBox x:Name="MailNewGroup" Header="{ui:Loc GrpNew}">
+                    <Fluent:Button Header="{ui:Loc NewEmail}" LargeIcon="{ui:Glyph E715, Color=#0F6CBD}" Icon="{ui:Glyph E715, Size=16, Color=#0F6CBD}" SizeDefinition="Large" Click="NewEmail_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc NewItems}" LargeIcon="{ui:Glyph E8A5, Color=#424242, Badge=E710, BadgeColor=#0F6CBD}" Icon="{ui:Glyph E8A5, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc EmailMessage}" Icon="{ui:Glyph E715, Size=16, Color=#0F6CBD}" Click="NewEmail_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Appointment}" Icon="{ui:Glyph E787, Size=16, Color=#0F6CBD}" Click="NewAppointment_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Meeting}" Icon="{ui:Glyph E716, Size=16, Color=#0F6CBD}" Click="NewMeeting_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Contact}" Icon="{ui:Glyph E77B, Size=16, Color=#0F6CBD}" Click="NewContact_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc ContactGroup}" Icon="{ui:Glyph E902, Size=16, Color=#0F6CBD}" Click="NewContactGroup_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Task}" Icon="{ui:Glyph E9D5, Size=16, Color=#0F6CBD}" Click="NewTask_Click" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Mail: Delete ===== -->
+                <Fluent:RibbonGroupBox x:Name="MailDeleteGroup" Header="{ui:Loc GrpDelete}">
+                    <Fluent:Button Header="{ui:Loc Ignore}" Icon="{ui:Glyph E8D8, Size=16}" SizeDefinition="Middle" Click="Ignore_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc CleanUp}" Icon="{ui:Glyph E894, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc CleanUpConversation}" Click="CleanUpConversation_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc CleanUpFolder}" Click="CleanUpFolder_Click" />
+                    </Fluent:DropDownButton>
+                    <Fluent:DropDownButton Header="{ui:Loc Junk}" Icon="{ui:Glyph E8F8, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc BlockSender}" Icon="{ui:Glyph E8F8, Size=16}" Click="BlockSender_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc NeverBlockSender}" Click="NotJunk_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc NotJunk}" Click="NotJunk_Click" />
+                    </Fluent:DropDownButton>
+                    <Fluent:Button Header="{ui:Loc Delete}" LargeIcon="{ui:Glyph E74D, Color=#424242}" Icon="{ui:Glyph E74D, Size=16}" SizeDefinition="Large" Click="Delete_Click" />
+                    <Fluent:Button Header="{ui:Loc Archive}" LargeIcon="{ui:Glyph E7B8, Color=#424242}" Icon="{ui:Glyph E7B8, Size=16}" SizeDefinition="Large" Click="Archive_Click" />
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Mail: Respond ===== -->
+                <Fluent:RibbonGroupBox x:Name="MailRespondGroup" Header="{ui:Loc GrpRespond}">
+                    <Fluent:Button Header="{ui:Loc Reply}" LargeIcon="{ui:Glyph E8CA, Color=#5C2E91}" Icon="{ui:Glyph E8CA, Size=16, Color=#5C2E91}" SizeDefinition="Large" Click="Reply_Click" />
+                    <Fluent:Button Header="{ui:Loc ReplyAll}" LargeIcon="{ui:Glyph E8C2, Color=#5C2E91}" Icon="{ui:Glyph E8C2, Size=16, Color=#5C2E91}" SizeDefinition="Large" Click="ReplyAll_Click" />
+                    <Fluent:Button Header="{ui:Loc Forward}" LargeIcon="{ui:Glyph E89C, Color=#0F6CBD}" Icon="{ui:Glyph E89C, Size=16, Color=#0F6CBD}" SizeDefinition="Large" Click="Forward_Click" />
+                    <Fluent:Button Header="{ui:Loc Meeting}" Icon="{ui:Glyph E787, Size=16, Color=#0F6CBD}" SizeDefinition="Middle" Click="ReplyWithMeeting_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc More}" Icon="{ui:Glyph E712, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc ForwardAsAttachment}" Icon="{ui:Glyph E723, Size=16}" Click="ForwardAsAttachment_Click" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Mail: Quick steps ===== -->
+                <Fluent:RibbonGroupBox x:Name="MailQuickStepsGroup" Header="{ui:Loc GrpQuickSteps}">
+                    <Fluent:Button x:Name="QsMoveTo" Header="{ui:Loc Archive}" Icon="{ui:Glyph E7B8, Size=16}" SizeDefinition="Middle" Click="Archive_Click" />
+                    <Fluent:Button Header="{ui:Loc ReplyAll}" Icon="{ui:Glyph E8C2, Size=16, Color=#5C2E91, Badge=E74D}" SizeDefinition="Middle" Click="ReplyDelete_Click" ToolTip="Reply &amp; Delete" />
+                    <Fluent:Button Header="{ui:Loc MarkComplete}" Icon="{ui:Glyph E73E, Size=16, Color=#107C10}" SizeDefinition="Middle" Click="Done_Click" />
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Mail: Move ===== -->
+                <Fluent:RibbonGroupBox x:Name="MailMoveGroup" Header="{ui:Loc GrpMove}">
+                    <Fluent:DropDownButton x:Name="MoveDropDown" Header="{ui:Loc MoveToFolder}" LargeIcon="{ui:Glyph E8DE, Color=#C19C00}" Icon="{ui:Glyph E8DE, Size=16}" SizeDefinition="Large" DropDownOpened="MoveDropDown_Opened" />
+                    <Fluent:DropDownButton Header="{ui:Loc Rules}" LargeIcon="{ui:Glyph E8CB, Color=#0F6CBD}" Icon="{ui:Glyph E8CB, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc CreateRule}" Click="CreateRule_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc ManageRulesAlerts}" Icon="{ui:Glyph E8CB, Size=16}" Click="Rules_Click" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Mail: Tags ===== -->
+                <Fluent:RibbonGroupBox x:Name="MailTagsGroup" Header="{ui:Loc GrpTags}">
+                    <Fluent:Button Header="{ui:Loc UnreadRead}" LargeIcon="{ui:Glyph E8C3, Color=#424242}" Icon="{ui:Glyph E8C3, Size=16}" SizeDefinition="Large" Click="ToggleRead_Click" />
+                    <Fluent:DropDownButton x:Name="CategorizeDropDown" Header="{ui:Loc Categorize}" LargeIcon="{ui:Glyph E8EC, Color=#C4314B}" Icon="{ui:Glyph E8EC, Size=16}" SizeDefinition="Large" DropDownOpened="CategorizeDropDown_Opened" />
+                    <Fluent:DropDownButton x:Name="FollowUpDropDown" Header="{ui:Loc FollowUp}" LargeIcon="{ui:Glyph E7C1, Color=#D13438}" Icon="{ui:Glyph E7C1, Size=16, Color=#D13438}" SizeDefinition="Large" DropDownOpened="FollowUpDropDown_Opened" />
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Calendar: New ===== -->
+                <Fluent:RibbonGroupBox x:Name="CalNewGroup" Header="{ui:Loc GrpNew}">
+                    <Fluent:Button Header="{ui:Loc NewAppointment}" LargeIcon="{ui:Glyph E787, Color=#0F6CBD, Badge=E710}" Icon="{ui:Glyph E787, Size=16, Color=#0F6CBD}" SizeDefinition="Large" Click="NewAppointment_Click" />
+                    <Fluent:Button Header="{ui:Loc NewMeeting}" LargeIcon="{ui:Glyph E716, Color=#0F6CBD}" Icon="{ui:Glyph E716, Size=16, Color=#0F6CBD}" SizeDefinition="Large" Click="NewMeeting_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc NewItems}" LargeIcon="{ui:Glyph E8A5, Color=#424242, Badge=E710, BadgeColor=#0F6CBD}" Icon="{ui:Glyph E8A5, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc Appointment}" Icon="{ui:Glyph E787, Size=16, Color=#0F6CBD}" Click="NewAppointment_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Meeting}" Icon="{ui:Glyph E716, Size=16, Color=#0F6CBD}" Click="NewMeeting_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc AllDayEvent}" Icon="{ui:Glyph E8BF, Size=16, Color=#0F6CBD}" Click="NewAllDay_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc EmailMessage}" Icon="{ui:Glyph E715, Size=16, Color=#0F6CBD}" Click="NewEmail_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Contact}" Icon="{ui:Glyph E77B, Size=16, Color=#0F6CBD}" Click="NewContact_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Task}" Icon="{ui:Glyph E9D5, Size=16, Color=#0F6CBD}" Click="NewTask_Click" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+
+                <Fluent:RibbonGroupBox x:Name="CalGoToGroup" Header="{ui:Loc GrpGoTo}">
+                    <Fluent:Button Header="{ui:Loc Today}" LargeIcon="{ui:Glyph E8D1, Color=#0F6CBD}" Icon="{ui:Glyph E8D1, Size=16}" SizeDefinition="Large" Click="CalToday_Click" />
+                    <Fluent:Button Header="{ui:Loc Next7Days}" LargeIcon="{ui:Glyph E8C0, Color=#0F6CBD}" Icon="{ui:Glyph E8C0, Size=16}" SizeDefinition="Large" Click="CalNext7_Click" />
+                </Fluent:RibbonGroupBox>
+
+                <Fluent:RibbonGroupBox x:Name="CalArrangeGroup" Header="{ui:Loc GrpArrange}">
+                    <Fluent:ToggleButton x:Name="CalDayBtn" GroupName="calview" Header="{ui:Loc Day}" LargeIcon="{ui:Glyph E8BF, Color=#424242}" Icon="{ui:Glyph E8BF, Size=16}" SizeDefinition="Large" Click="CalView_Click" Tag="Day" />
+                    <Fluent:ToggleButton x:Name="CalWorkWeekBtn" GroupName="calview" Header="{ui:Loc WorkWeek}" LargeIcon="{ui:Glyph E8C0, Color=#424242}" Icon="{ui:Glyph E8C0, Size=16}" SizeDefinition="Large" Click="CalView_Click" Tag="WorkWeek" />
+                    <Fluent:ToggleButton x:Name="CalWeekBtn" GroupName="calview" Header="{ui:Loc Week}" LargeIcon="{ui:Glyph E8C0, Color=#0F6CBD}" Icon="{ui:Glyph E8C0, Size=16}" SizeDefinition="Large" Click="CalView_Click" Tag="Week" />
+                    <Fluent:ToggleButton x:Name="CalMonthBtn" GroupName="calview" Header="{ui:Loc Month}" LargeIcon="{ui:Glyph E787, Color=#424242}" Icon="{ui:Glyph E787, Size=16}" SizeDefinition="Large" Click="CalView_Click" Tag="Month" />
+                    <Fluent:ToggleButton x:Name="CalScheduleBtn" GroupName="calview" Header="{ui:Loc ScheduleView}" LargeIcon="{ui:Glyph E823, Color=#424242}" Icon="{ui:Glyph E823, Size=16}" SizeDefinition="Large" Click="CalView_Click" Tag="Schedule" />
+                </Fluent:RibbonGroupBox>
+
+                <Fluent:RibbonGroupBox x:Name="CalManageGroup" Header="{ui:Loc GrpManageCalendars}">
+                    <Fluent:DropDownButton Header="{ui:Loc OpenCalendar}" LargeIcon="{ui:Glyph E787, Color=#0F6CBD, Badge=E8E5}" Icon="{ui:Glyph E787, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc FromAddressBook}" Icon="{ui:Glyph E779, Size=16}" Click="OpenSharedCalendarFromAddressBook_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc OpenSharedCalendar}" Icon="{ui:Glyph E787, Size=16}" Click="OpenSharedCalendar_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc CreateNewBlankCalendar}" Icon="{ui:Glyph E710, Size=16}" Click="NewCalendar_Click" />
+                    </Fluent:DropDownButton>
+                    <Fluent:Button Header="{ui:Loc CalendarGroups}" LargeIcon="{ui:Glyph E902, Color=#424242}" Icon="{ui:Glyph E902, Size=16}" SizeDefinition="Large" Click="CalendarGroups_Click" />
+                </Fluent:RibbonGroupBox>
+
+                <Fluent:RibbonGroupBox x:Name="CalShareGroup" Header="{ui:Loc GrpShare}">
+                    <Fluent:Button Header="{ui:Loc EmailCalendar}" LargeIcon="{ui:Glyph E715, Color=#0F6CBD, Badge=E787}" Icon="{ui:Glyph E715, Size=16}" SizeDefinition="Large" Click="EmailCalendar_Click" />
+                    <Fluent:Button Header="{ui:Loc ShareCalendar}" LargeIcon="{ui:Glyph E787, Color=#0F6CBD, Badge=E72D, BadgeColor=#107C10}" Icon="{ui:Glyph E72D, Size=16}" SizeDefinition="Large" Click="ShareCalendar_Click" />
+                    <Fluent:Button Header="{ui:Loc CalendarPermissions}" LargeIcon="{ui:Glyph E787, Color=#0F6CBD, Badge=E72E, BadgeColor=#C19C00}" Icon="{ui:Glyph E72E, Size=16}" SizeDefinition="Large" Click="CalendarPermissions_Click" />
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== People ===== -->
+                <Fluent:RibbonGroupBox x:Name="PeopleNewGroup" Header="{ui:Loc GrpNew}">
+                    <Fluent:Button Header="{ui:Loc NewContact}" LargeIcon="{ui:Glyph E77B, Color=#0F6CBD, Badge=E710}" Icon="{ui:Glyph E77B, Size=16}" SizeDefinition="Large" Click="NewContact_Click" />
+                    <Fluent:Button Header="{ui:Loc NewContactGroup}" LargeIcon="{ui:Glyph E902, Color=#0F6CBD}" Icon="{ui:Glyph E902, Size=16}" SizeDefinition="Large" Click="NewContactGroup_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc NewItems}" LargeIcon="{ui:Glyph E8A5, Color=#424242, Badge=E710, BadgeColor=#0F6CBD}" Icon="{ui:Glyph E8A5, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc EmailMessage}" Icon="{ui:Glyph E715, Size=16, Color=#0F6CBD}" Click="NewEmail_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Appointment}" Icon="{ui:Glyph E787, Size=16, Color=#0F6CBD}" Click="NewAppointment_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Meeting}" Icon="{ui:Glyph E716, Size=16, Color=#0F6CBD}" Click="NewMeeting_Click" />
+                        <Fluent:MenuItem Header="{ui:Loc Task}" Icon="{ui:Glyph E9D5, Size=16, Color=#0F6CBD}" Click="NewTask_Click" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="PeopleDeleteGroup" Header="{ui:Loc GrpDelete}">
+                    <Fluent:Button Header="{ui:Loc Delete}" LargeIcon="{ui:Glyph E74D, Color=#424242}" Icon="{ui:Glyph E74D, Size=16}" SizeDefinition="Large" Click="Delete_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="PeopleCommunicateGroup" Header="{ui:Loc GrpCommunicate}">
+                    <Fluent:Button Header="{ui:Loc SendEmail}" Icon="{ui:Glyph E715, Size=16, Color=#0F6CBD}" SizeDefinition="Middle" Click="ContactEmail_Click" />
+                    <Fluent:Button Header="{ui:Loc ScheduleMeeting}" Icon="{ui:Glyph E787, Size=16, Color=#0F6CBD}" SizeDefinition="Middle" Click="ContactMeeting_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="PeopleViewGroup" Header="{ui:Loc GrpCurrentView}">
+                    <Fluent:ToggleButton x:Name="PeopleViewPeople" GroupName="pview" Header="{ui:Loc PeopleView}" LargeIcon="{ui:Glyph E716, Color=#0F6CBD}" SizeDefinition="Large" Tag="People" Click="PeopleView_Click" />
+                    <Fluent:ToggleButton x:Name="PeopleViewCard" GroupName="pview" Header="{ui:Loc BusinessCard}" LargeIcon="{ui:Glyph E779, Color=#424242}" SizeDefinition="Large" Tag="BusinessCard" Click="PeopleView_Click" />
+                    <Fluent:ToggleButton x:Name="PeopleViewPhone" GroupName="pview" Header="{ui:Loc PhoneView}" LargeIcon="{ui:Glyph E717, Color=#424242}" SizeDefinition="Large" Tag="Phone" Click="PeopleView_Click" />
+                    <Fluent:ToggleButton x:Name="PeopleViewList" GroupName="pview" Header="{ui:Loc ListView}" LargeIcon="{ui:Glyph E8FD, Color=#424242}" SizeDefinition="Large" Tag="List" Click="PeopleView_Click" />
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Tasks ===== -->
+                <Fluent:RibbonGroupBox x:Name="TasksNewGroup" Header="{ui:Loc GrpNew}">
+                    <Fluent:Button Header="{ui:Loc NewTask}" LargeIcon="{ui:Glyph E9D5, Color=#0F6CBD, Badge=E710}" Icon="{ui:Glyph E9D5, Size=16}" SizeDefinition="Large" Click="NewTask_Click" />
+                    <Fluent:Button Header="{ui:Loc NewEmail}" LargeIcon="{ui:Glyph E715, Color=#0F6CBD}" Icon="{ui:Glyph E715, Size=16}" SizeDefinition="Large" Click="NewEmail_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="TasksDeleteGroup" Header="{ui:Loc GrpDelete}">
+                    <Fluent:Button Header="{ui:Loc Delete}" LargeIcon="{ui:Glyph E74D, Color=#424242}" Icon="{ui:Glyph E74D, Size=16}" SizeDefinition="Large" Click="Delete_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="TasksManageGroup" Header="{ui:Loc GrpManageTask}">
+                    <Fluent:Button Header="{ui:Loc MarkComplete}" LargeIcon="{ui:Glyph E73E, Color=#107C10}" Icon="{ui:Glyph E73E, Size=16}" SizeDefinition="Large" Click="TaskComplete_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="TasksFollowUpGroup" Header="{ui:Loc GrpFollowUp}">
+                    <Fluent:Button Header="{ui:Loc FlagToday}" Icon="{ui:Glyph E7C1, Size=16, Color=#D13438}" SizeDefinition="Middle" Click="TaskDue_Click" Tag="0" />
+                    <Fluent:Button Header="{ui:Loc FlagTomorrow}" Icon="{ui:Glyph E7C1, Size=16, Color=#D13438}" SizeDefinition="Middle" Click="TaskDue_Click" Tag="1" />
+                    <Fluent:Button Header="{ui:Loc FlagNextWeek}" Icon="{ui:Glyph E7C1, Size=16, Color=#D13438}" SizeDefinition="Middle" Click="TaskDue_Click" Tag="7" />
+                </Fluent:RibbonGroupBox>
+
+                <!-- ===== Common: Find ===== -->
+                <Fluent:RibbonGroupBox x:Name="FindGroup" Header="{ui:Loc GrpFind}">
+                    <Fluent:TextBox x:Name="SearchPeopleBox" Header="" Width="150" KeyDown="SearchPeople_KeyDown" />
+                    <Fluent:Button Header="{ui:Loc AddressBook}" Icon="{ui:Glyph E779, Size=16}" SizeDefinition="Middle" Click="AddressBook_Click" />
+                    <Fluent:DropDownButton x:Name="FilterEmailButton" Header="{ui:Loc FilterEmail}" Icon="{ui:Glyph E71C, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc Unread}" Click="FilterEmail_Click" Tag="Unread" />
+                        <Fluent:MenuItem Header="{ui:Loc HasAttachments}" Click="FilterEmail_Click" Tag="HasAttachments" />
+                        <Fluent:MenuItem Header="{ui:Loc ThisWeek}" Click="FilterEmail_Click" Tag="ThisWeek" />
+                        <Fluent:MenuItem Header="{ui:Loc Flagged}" Click="FilterEmail_Click" Tag="Flagged" />
+                        <Fluent:MenuItem Header="{ui:Loc ImportantMail}" Click="FilterEmail_Click" Tag="Important" />
+                        <Separator />
+                        <Fluent:MenuItem Header="{ui:Loc All}" Click="FilterEmail_Click" Tag="All" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- ======================================== SEND / RECEIVE -->
+            <Fluent:RibbonTabItem Header="{ui:Loc SendReceive}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpSendReceive}">
+                    <Fluent:Button Header="{ui:Loc SendReceiveAll}" LargeIcon="{ui:Glyph E895, Color=#0F6CBD}" Icon="{ui:Glyph E895, Size=16}" SizeDefinition="Large" Click="SendReceive_Click" />
+                    <Fluent:Button Header="{ui:Loc UpdateFolder}" Icon="{ui:Glyph E72C, Size=16}" SizeDefinition="Middle" Click="UpdateFolder_Click" />
+                    <Fluent:Button Header="{ui:Loc SendAll}" Icon="{ui:Glyph E724, Size=16}" SizeDefinition="Middle" Click="SendReceive_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpPreferences}">
+                    <Fluent:ToggleButton x:Name="WorkOfflineButton" Header="{ui:Loc WorkOffline}" LargeIcon="{ui:Glyph E8CD, Color=#424242}" Icon="{ui:Glyph E8CD, Size=16}" SizeDefinition="Large" Click="WorkOffline_Click" />
+                    <Fluent:Button Header="{ui:Loc OfflinePrepareFolder}" Icon="{ui:Glyph E896, Size=16}" SizeDefinition="Middle" Click="PrepareOfflineFolder_Click" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- ======================================== FOLDER -->
+            <Fluent:RibbonTabItem Header="{ui:Loc Folder}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpNew}">
+                    <Fluent:Button Header="{ui:Loc NewFolder}" LargeIcon="{ui:Glyph E8F4, Color=#C19C00}" Icon="{ui:Glyph E8F4, Size=16}" SizeDefinition="Large" Click="NewFolder_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpActions}">
+                    <Fluent:Button Header="{ui:Loc RenameFolder}" Icon="{ui:Glyph E8AC, Size=16}" SizeDefinition="Middle" Click="RenameFolder_Click" />
+                    <Fluent:Button Header="{ui:Loc CopyFolder}" Icon="{ui:Glyph E8C8, Size=16}" SizeDefinition="Middle" Click="CopyFolder_Click" />
+                    <Fluent:Button Header="{ui:Loc MoveFolder}" Icon="{ui:Glyph E8DE, Size=16}" SizeDefinition="Middle" Click="MoveFolder_Click" />
+                    <Fluent:Button Header="{ui:Loc DeleteFolder}" LargeIcon="{ui:Glyph E74D, Color=#424242}" Icon="{ui:Glyph E74D, Size=16}" SizeDefinition="Large" Click="DeleteFolder_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpCleanUp}">
+                    <Fluent:Button Header="{ui:Loc MarkAllAsRead}" LargeIcon="{ui:Glyph E8C3, Color=#424242}" Icon="{ui:Glyph E8C3, Size=16}" SizeDefinition="Large" Click="MarkAllRead_Click" />
+                    <Fluent:Button Header="{ui:Loc CleanUpFolder}" Icon="{ui:Glyph E894, Size=16}" SizeDefinition="Middle" Click="CleanUpFolder_Click" />
+                    <Fluent:Button Header="{ui:Loc DeleteAll}" Icon="{ui:Glyph E74D, Size=16}" SizeDefinition="Middle" Click="DeleteAll_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpFavorites}">
+                    <Fluent:Button Header="{ui:Loc ShowInFavorites}" LargeIcon="{ui:Glyph E734, Color=#C19C00}" Icon="{ui:Glyph E734, Size=16}" SizeDefinition="Large" Click="ToggleFavorite_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpProperties}">
+                    <Fluent:Button Header="{ui:Loc FolderPermissions}" LargeIcon="{ui:Glyph E8B7, Color=#C19C00, Badge=E72E, BadgeColor=#424242}" Icon="{ui:Glyph E72E, Size=16}" SizeDefinition="Large" Click="FolderPermissions_Click" />
+                    <Fluent:Button Header="{ui:Loc FolderProperties}" LargeIcon="{ui:Glyph E8B7, Color=#C19C00, Badge=E713, BadgeColor=#424242}" Icon="{ui:Glyph E713, Size=16}" SizeDefinition="Large" Click="FolderPermissions_Click" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- ======================================== VIEW -->
+            <Fluent:RibbonTabItem Header="{ui:Loc View}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpCurrentView}">
+                    <Fluent:Button Header="{ui:Loc ResetView}" LargeIcon="{ui:Glyph E72C, Color=#424242}" Icon="{ui:Glyph E72C, Size=16}" SizeDefinition="Large" Click="ResetView_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="ViewMessagesGroup" Header="{ui:Loc GrpMessages}">
+                    <Fluent:CheckBox x:Name="ShowAvatarsCheck" Header="{ui:Loc ShowSenderPhotos}" Click="ShowAvatars_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc MessagePreview}" Icon="{ui:Glyph E8BD, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc Off}" Click="Preview_Click" Tag="0" />
+                        <Fluent:MenuItem Header="{ui:Loc OneLine}" Click="Preview_Click" Tag="1" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox x:Name="ViewArrangeGroup" Header="{ui:Loc GrpArrangement}">
+                    <Fluent:DropDownButton Header="{ui:Loc ArrangeBy}" LargeIcon="{ui:Glyph E8CB, Color=#424242}" Icon="{ui:Glyph E8CB, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc Date}" Click="ArrangeBy_Click" Tag="Date" />
+                        <Fluent:MenuItem Header="{ui:Loc From}" Click="ArrangeBy_Click" Tag="From" />
+                        <Fluent:MenuItem Header="{ui:Loc To}" Click="ArrangeBy_Click" Tag="To" />
+                        <Fluent:MenuItem Header="{ui:Loc Categories}" Click="ArrangeBy_Click" Tag="Categories" />
+                        <Fluent:MenuItem Header="{ui:Loc FlagStatus}" Click="ArrangeBy_Click" Tag="Flag" />
+                        <Fluent:MenuItem Header="{ui:Loc Size}" Click="ArrangeBy_Click" Tag="Size" />
+                        <Fluent:MenuItem Header="{ui:Loc Subject}" Click="ArrangeBy_Click" Tag="Subject" />
+                        <Fluent:MenuItem Header="{ui:Loc Attachments}" Click="ArrangeBy_Click" Tag="Attachments" />
+                        <Fluent:MenuItem Header="{ui:Loc Importance}" Click="ArrangeBy_Click" Tag="Importance" />
+                    </Fluent:DropDownButton>
+                    <Fluent:Button Header="{ui:Loc ReverseSort}" Icon="{ui:Glyph E8CB, Size=16}" SizeDefinition="Middle" Click="ReverseSort_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpLayout}">
+                    <Fluent:DropDownButton Header="{ui:Loc FolderPane}" LargeIcon="{ui:Glyph E8A0, Color=#424242}" Icon="{ui:Glyph E8A0, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc Normal}" Click="FolderPaneMode_Click" Tag="Normal" />
+                        <Fluent:MenuItem Header="{ui:Loc Minimized}" Click="FolderPaneMode_Click" Tag="Minimized" />
+                        <Fluent:MenuItem Header="{ui:Loc Off}" Click="FolderPaneMode_Click" Tag="Off" />
+                    </Fluent:DropDownButton>
+                    <Fluent:DropDownButton Header="{ui:Loc ReadingPane}" LargeIcon="{ui:Glyph E89F, Color=#424242}" Icon="{ui:Glyph E89F, Size=16}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc Right}" Click="ReadingPaneMode_Click" Tag="Right" />
+                        <Fluent:MenuItem Header="{ui:Loc Bottom}" Click="ReadingPaneMode_Click" Tag="Bottom" />
+                        <Fluent:MenuItem Header="{ui:Loc Off}" Click="ReadingPaneMode_Click" Tag="Off" />
+                    </Fluent:DropDownButton>
+                    <Fluent:ToggleButton x:Name="ToDoBarToggle" Header="{ui:Loc ToDoBar}" LargeIcon="{ui:Glyph E9D5, Color=#424242}" Icon="{ui:Glyph E9D5, Size=16}" SizeDefinition="Large" Click="ToDoBar_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpWindow}">
+                    <Fluent:Button Header="{ui:Loc RemindersWindow}" Icon="{ui:Glyph EA8F, Size=16}" SizeDefinition="Middle" Click="RemindersWindow_Click" />
+                    <Fluent:Button Header="{ui:Loc CloseAllItems}" Icon="{ui:Glyph E8BB, Size=16}" SizeDefinition="Middle" Click="CloseAllItems_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc Language}">
+                    <Fluent:ToggleButton x:Name="LangKaButton" GroupName="lang" Header="{ui:Loc Georgian}" Icon="{ui:Glyph E774, Size=16}" SizeDefinition="Middle" Click="Language_Click" Tag="ka-GE" />
+                    <Fluent:ToggleButton x:Name="LangEnButton" GroupName="lang" Header="{ui:Loc English}" Icon="{ui:Glyph E774, Size=16}" SizeDefinition="Middle" Click="Language_Click" Tag="en-US" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- ======================================== HELP -->
+            <Fluent:RibbonTabItem Header="{ui:Loc Help}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpHelp}">
+                    <Fluent:Button Header="{ui:Loc Help}" LargeIcon="{ui:Glyph E897, Color=#0F6CBD}" Icon="{ui:Glyph E897, Size=16}" SizeDefinition="Large" Click="About_Click" />
+                    <Fluent:Button Header="{ui:Loc Shortcuts}" LargeIcon="{ui:Glyph E765, Color=#424242}" Icon="{ui:Glyph E765, Size=16}" SizeDefinition="Large" Click="About_Click" />
+                    <Fluent:Button Header="{ui:Loc AboutApp}" LargeIcon="{ui:Glyph E946, Color=#0F6CBD}" Icon="{ui:Glyph E946, Size=16}" SizeDefinition="Large" Click="About_Click" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+
+        <!-- ================================================================== BODY -->
+        <DockPanel Grid.Row="1">
+        <!-- Outlook-style yellow bar while automatic replies are on -->
+        <Border x:Name="OofBar" DockPanel.Dock="Top" Visibility="Collapsed" Background="#FFF4CE" BorderBrush="#F2E2A5" BorderThickness="0,0,0,1" Padding="12,6">
+            <DockPanel>
+                <Button x:Name="OofTurnOff" DockPanel.Dock="Right" Style="{StaticResource DialogButton}" Content="{ui:Loc TurnOff}" Click="OofTurnOff_Click" Margin="8,0,0,0" />
+                <Button DockPanel.Dock="Right" Style="{StaticResource FlatButton}" Content="{ui:Loc AutoRepliesTitle}" Click="AutoReplies_Click" Padding="8,2" />
+                <TextBlock VerticalAlignment="Center" FontWeight="SemiBold" Text="{ui:Loc AutoRepliesOnBanner}" />
+            </DockPanel>
+        </Border>
+        <Grid Background="White">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="48" />
+                <ColumnDefinition x:Name="LeftPaneColumn" Width="250" MinWidth="0" />
+                <ColumnDefinition x:Name="LeftSplitterColumn" Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition x:Name="ToDoColumn" Width="0" />
+            </Grid.ColumnDefinitions>
+
+            <!-- App bar (module navigation) -->
+            <Border Background="{StaticResource AppBarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                <DockPanel LastChildFill="False">
+                    <StackPanel DockPanel.Dock="Top" Margin="0,4,0,0">
+                        <RadioButton x:Name="NavMail" Style="{StaticResource AppBarButton}" GroupName="nav" IsChecked="True" Checked="Nav_Checked" Tag="Mail" ToolTip="{ui:Loc Mail}">
+                            <TextBlock Text="&#xE715;" FontFamily="{StaticResource IconFont}" FontSize="18" />
+                        </RadioButton>
+                        <RadioButton x:Name="NavCalendar" Style="{StaticResource AppBarButton}" GroupName="nav" Checked="Nav_Checked" Tag="Calendar" ToolTip="{ui:Loc Calendar}">
+                            <TextBlock Text="&#xE787;" FontFamily="{StaticResource IconFont}" FontSize="18" />
+                        </RadioButton>
+                        <RadioButton x:Name="NavPeople" Style="{StaticResource AppBarButton}" GroupName="nav" Checked="Nav_Checked" Tag="People" ToolTip="{ui:Loc People}">
+                            <TextBlock Text="&#xE716;" FontFamily="{StaticResource IconFont}" FontSize="18" />
+                        </RadioButton>
+                        <RadioButton x:Name="NavTasks" Style="{StaticResource AppBarButton}" GroupName="nav" Checked="Nav_Checked" Tag="Tasks" ToolTip="{ui:Loc Tasks}">
+                            <TextBlock Text="&#xE9D5;" FontFamily="{StaticResource IconFont}" FontSize="18" />
+                        </RadioButton>
+                    </StackPanel>
+                    <StackPanel DockPanel.Dock="Bottom" Margin="0,0,0,6">
+                        <Button Style="{StaticResource FlatButton}" Width="38" Height="38" Click="Options_Click" ToolTip="{ui:Loc Options}">
+                            <TextBlock Text="&#xE713;" FontFamily="{StaticResource IconFont}" FontSize="16" Foreground="#424242" />
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Left pane: folder pane / module navigation -->
+            <Grid x:Name="LeftPane" Grid.Column="1" Background="{StaticResource FolderPaneBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <DockPanel Margin="10,6,4,2">
+                    <Button DockPanel.Dock="Right" Style="{StaticResource FlatButton}" Padding="4,2" Click="MinimizeFolderPane_Click" ToolTip="{ui:Loc Minimized}">
+                        <TextBlock Text="&#xE76B;" FontFamily="{StaticResource IconFont}" FontSize="10" />
+                    </Button>
+                    <TextBlock x:Name="LeftPaneTitle" Text="{ui:Loc Folders}" FontSize="11" Foreground="#605E5C" VerticalAlignment="Center" />
+                </DockPanel>
+                <v:FolderPane x:Name="Folders" Grid.Row="1" />
+                <v:CalendarNavPane x:Name="CalendarNav" Grid.Row="1" Visibility="Collapsed" />
+                <v:PeopleNavPane x:Name="PeopleNav" Grid.Row="1" Visibility="Collapsed" />
+                <v:TasksNavPane x:Name="TasksNav" Grid.Row="1" Visibility="Collapsed" />
+            </Grid>
+
+            <!-- Minimized folder pane strip -->
+            <Border x:Name="MinimizedPane" Grid.Column="1" Background="{StaticResource FolderPaneBrush}" Visibility="Collapsed" Cursor="Hand" MouseLeftButtonUp="RestoreFolderPane_Click">
+                <StackPanel>
+                    <TextBlock Text="&#xE76C;" FontFamily="{StaticResource IconFont}" FontSize="10" HorizontalAlignment="Center" Margin="0,10,0,10" />
+                    <TextBlock x:Name="MinimizedTitle" FontSize="13" FontWeight="SemiBold" Foreground="#424242">
+                        <TextBlock.LayoutTransform>
+                            <RotateTransform Angle="90" />
+                        </TextBlock.LayoutTransform>
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <GridSplitter x:Name="LeftSplitter" Grid.Column="2" Style="{StaticResource GridSplitterV}" ResizeBehavior="PreviousAndNext" DragCompleted="LeftSplitter_DragCompleted" />
+
+            <!-- Module content -->
+            <Grid Grid.Column="3">
+                <v:MailView x:Name="Mail" />
+                <v:CalendarView x:Name="CalendarModule" Visibility="Collapsed" />
+                <v:PeopleView x:Name="PeopleModule" Visibility="Collapsed" />
+                <v:TasksView x:Name="TasksModule" Visibility="Collapsed" />
+
+                <!-- Welcome / no account -->
+                <Border x:Name="WelcomePanel" Background="White" Visibility="Collapsed">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Width="460">
+                        <TextBlock Text="&#xE715;" FontFamily="{StaticResource IconFont}" FontSize="64" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" />
+                        <TextBlock Text="{ui:Loc Welcome}" FontSize="28" FontWeight="Light" HorizontalAlignment="Center" Margin="0,12,0,8" />
+                        <TextBlock Text="{ui:Loc WelcomeText}" TextWrapping="Wrap" TextAlignment="Center" Foreground="#605E5C" FontSize="13" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,22,0,0">
+                            <Button Style="{StaticResource PrimaryButton}" Content="{ui:Loc AddAccountTitle}" Height="32" Padding="20,0" Click="AddAccount_Click" />
+                            <Button Style="{StaticResource DialogButton}" Content="{ui:Loc TryDemo}" Height="32" Padding="16,0" Margin="10,0,0,0" Click="TryDemo_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- To-Do bar -->
+            <Border x:Name="ToDoBarHost" Grid.Column="4" BorderBrush="{StaticResource BorderBrush}" BorderThickness="1,0,0,0" Background="{StaticResource FolderPaneBrush}" Visibility="Collapsed">
+                <v:ToDoBar x:Name="ToDoBar" />
+            </Border>
+        </Grid>
+
+        <!-- ================================================================== STATUS BAR -->
+        </DockPanel>
+        <Border Grid.Row="2" Background="{StaticResource StatusBarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Height="26">
+            <DockPanel Margin="10,0,8,0">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource FlatButton}" Padding="4,1" ToolTip="{ui:Loc Normal}" Click="NormalView_Click">
+                        <TextBlock Text="&#xE8A1;" FontFamily="{StaticResource IconFont}" FontSize="12" />
+                    </Button>
+                    <Button Style="{StaticResource FlatButton}" Padding="4,1" ToolTip="{ui:Loc Reading}" Click="ReadingView_Click">
+                        <TextBlock Text="&#xE736;" FontFamily="{StaticResource IconFont}" FontSize="12" />
+                    </Button>
+                    <Rectangle Width="1" Fill="#C8C6C4" Margin="8,5" />
+                    <Button Style="{StaticResource FlatButton}" Padding="3,0" Click="ZoomOut_Click" Content="−" FontSize="13" />
+                    <Slider x:Name="ZoomSlider" Width="100" Minimum="0.5" Maximum="2" Value="1" VerticalAlignment="Center" ValueChanged="ZoomSlider_ValueChanged" />
+                    <Button Style="{StaticResource FlatButton}" Padding="3,0" Click="ZoomIn_Click" Content="+" FontSize="13" />
+                    <TextBlock x:Name="ZoomText" Text="100%" Width="40" TextAlignment="Right" VerticalAlignment="Center" Foreground="#424242" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock x:Name="StatusItems" Foreground="#424242" Margin="0,0,18,0" />
+                    <TextBlock x:Name="StatusUnread" Foreground="#424242" Margin="0,0,18,0" />
+                    <Button x:Name="StatusReminders" Style="{StaticResource FlatButton}" Padding="4,0" Visibility="Collapsed" Click="RemindersWindow_Click">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="&#xEA8F;" FontFamily="{StaticResource IconFont}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Center" />
+                            <TextBlock x:Name="StatusRemindersText" />
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,16,0">
+                    <TextBlock x:Name="StatusSync" Foreground="#424242" Margin="0,0,16,0" />
+                    <TextBlock x:Name="StatusConnection" Foreground="#424242" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+    </Grid>
+</Fluent:RibbonWindow>

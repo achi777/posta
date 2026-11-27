@@ -1,0 +1,232 @@
+<UserControl x:Class="Posta.App.Views.MailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="clr-namespace:Posta.App.Infrastructure"
+             xmlns:v="clr-namespace:Posta.App.Views"
+             xmlns:m="clr-namespace:Posta.Core.Models;assembly=Posta.Core"
+             Background="White">
+    <UserControl.Resources>
+        <DataTemplate x:Key="MessageTemplate" DataType="{x:Type m:MailItemSummary}">
+            <Grid x:Name="Root" Background="Transparent" MinHeight="58">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="UnreadBar" Background="{StaticResource UnreadBrush}" Visibility="Collapsed" />
+                <!-- Sender avatar -->
+                <Grid Grid.Column="1" Width="32" Height="32" Margin="8,8,4,0" VerticalAlignment="Top"
+                      Visibility="{Binding DataContext.ShowAvatars, RelativeSource={RelativeSource AncestorType=ListBox}, Converter={StaticResource BoolToVis}}">
+                    <Ellipse Fill="{Binding From.Address, Converter={StaticResource InitialsBrush}}" />
+                    <TextBlock Text="{Binding From.Initials}" Foreground="White" FontSize="11.5" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Grid>
+                <Grid Grid.Column="2" Margin="6,5,8,6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <!-- Line 1: sender + status icons / hover actions -->
+                    <TextBlock x:Name="SenderText" FontSize="13.5" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextBrush}">
+                        <Run x:Name="DraftRun" Text="" Foreground="#C4314B" /><Run Text="{Binding ListName, Mode=OneWay}" />
+                    </TextBlock>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel x:Name="HoverActions" Orientation="Horizontal" Visibility="Collapsed">
+                            <Button Style="{StaticResource FlatButton}" Padding="3,1" ToolTip="{ui:Loc Delete}" Tag="delete" Click="HoverAction_Click">
+                                <TextBlock Text="&#xE74D;" FontFamily="{StaticResource IconFont}" FontSize="12" />
+                            </Button>
+                            <Button Style="{StaticResource FlatButton}" Padding="3,1" ToolTip="{ui:Loc UnreadRead}" Tag="read" Click="HoverAction_Click">
+                                <TextBlock Text="&#xE8C3;" FontFamily="{StaticResource IconFont}" FontSize="12" />
+                            </Button>
+                        </StackPanel>
+                        <TextBlock x:Name="ImportantIcon" Text="!" FontWeight="Bold" Foreground="#C4314B" Margin="5,0,0,0" Visibility="Collapsed" />
+                        <TextBlock x:Name="LowIcon" Text="&#xE74B;" FontFamily="{StaticResource IconFont}" FontSize="11" Foreground="#0F6CBD" Margin="5,0,0,0" Visibility="Collapsed" />
+                        <TextBlock x:Name="MeetingIcon" Text="&#xE787;" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="#605E5C" Margin="5,0,0,0" Visibility="Collapsed" />
+                        <TextBlock Text="&#xE723;" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="#605E5C" Margin="5,0,0,0"
+                                   Visibility="{Binding HasAttachments, Converter={StaticResource BoolToVis}}" />
+                        <Button x:Name="FlagButton" Style="{StaticResource FlatButton}" Padding="3,1" Margin="2,0,0,0" Tag="flag" Click="HoverAction_Click" ToolTip="{ui:Loc FollowUp}">
+                            <TextBlock x:Name="FlagGlyph" Text="&#xE7C1;" FontFamily="{StaticResource IconFont}" FontSize="12" Foreground="#C8C6C4" />
+                        </Button>
+                    </StackPanel>
+
+                    <!-- Line 2: subject + date -->
+                    <TextBlock x:Name="SubjectText" Grid.Row="1" Text="{Binding Subject}" TextTrimming="CharacterEllipsis" Foreground="{StaticResource TextBrush}" FontSize="12.5" />
+                    <TextBlock x:Name="DateText" Grid.Row="1" Grid.Column="1" Text="{Binding Received, Converter={StaticResource ListDate}}" FontSize="11.5"
+                               Foreground="{StaticResource TextSecondaryBrush}" Margin="8,0,2,0" HorizontalAlignment="Right" />
+
+                    <!-- Line 3: preview + categories -->
+                    <DockPanel Grid.Row="2" Grid.ColumnSpan="2" Margin="0,1,0,0">
+                        <ItemsControl DockPanel.Dock="Right" ItemsSource="{Binding Categories}" VerticalAlignment="Center">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate><StackPanel Orientation="Horizontal" /></ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Width="10" Height="10" CornerRadius="1" Margin="3,0,0,0" Background="{Binding Converter={StaticResource CategoryColor}}"
+                                            ToolTip="{Binding Converter={StaticResource LocKey}}" />
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock x:Name="PreviewText" Text="{Binding Preview}" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"
+                                   TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"
+                                   Visibility="{Binding DataContext.ShowPreview, RelativeSource={RelativeSource AncestorType=ListBox}, Converter={StaticResource BoolToVis}}" />
+                    </DockPanel>
+                </Grid>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding IsRead}" Value="False">
+                    <Setter TargetName="UnreadBar" Property="Visibility" Value="Visible" />
+                    <Setter TargetName="SenderText" Property="FontWeight" Value="SemiBold" />
+                    <Setter TargetName="SubjectText" Property="FontWeight" Value="SemiBold" />
+                    <Setter TargetName="SubjectText" Property="Foreground" Value="{StaticResource UnreadBrush}" />
+                    <Setter TargetName="DateText" Property="Foreground" Value="{StaticResource UnreadBrush}" />
+                    <Setter TargetName="DateText" Property="FontWeight" Value="SemiBold" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsDraft}" Value="True">
+                    <Setter TargetName="DraftRun" Property="Text" Value="{ui:Loc Draft, Suffix=' '}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Importance}" Value="High">
+                    <Setter TargetName="ImportantIcon" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Importance}" Value="Low">
+                    <Setter TargetName="LowIcon" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsMeetingItem}" Value="True">
+                    <Setter TargetName="MeetingIcon" Property="Visibility" Value="Visible" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Flag}" Value="Flagged">
+                    <Setter TargetName="FlagGlyph" Property="Foreground" Value="#D13438" />
+                    <Setter TargetName="FlagGlyph" Property="Text" Value="&#xE7C1;" />
+                    <Setter TargetName="Root" Property="Background" Value="#FFF8F8" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Flag}" Value="Complete">
+                    <Setter TargetName="FlagGlyph" Property="Foreground" Value="#107C10" />
+                    <Setter TargetName="FlagGlyph" Property="Text" Value="&#xE73E;" />
+                </DataTrigger>
+                <Trigger SourceName="Root" Property="IsMouseOver" Value="True">
+                    <Setter TargetName="HoverActions" Property="Visibility" Value="Visible" />
+                </Trigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="GroupHeaderTemplate">
+            <Border Background="White" Padding="10,8,8,4" BorderBrush="#EDEBE9" BorderThickness="0,0,0,1">
+                <TextBlock Text="{Binding Name}" FontWeight="SemiBold" FontSize="12" Foreground="#252423" />
+            </Border>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="ListColumn" Width="420" MinWidth="240" />
+            <ColumnDefinition x:Name="SplitColumn" Width="Auto" />
+            <ColumnDefinition x:Name="PaneColumn" Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="ListRow" Height="*" />
+            <RowDefinition x:Name="SplitRow" Height="0" />
+            <RowDefinition x:Name="PaneRow" Height="0" />
+        </Grid.RowDefinitions>
+
+        <!-- Message list -->
+        <Grid x:Name="ListHost" Background="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Search -->
+            <Grid Margin="8,8,8,4">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="SearchBox" Style="{StaticResource SearchBox}" KeyDown="SearchBox_KeyDown" TextChanged="SearchBox_TextChanged" />
+                <ComboBox x:Name="ScopeBox" Grid.Column="1" Width="150" Height="28" Margin="6,0,0,0" VerticalContentAlignment="Center" SelectedIndex="0" SelectionChanged="ScopeBox_SelectionChanged">
+                    <ComboBoxItem Content="{ui:Loc CurrentFolder}" />
+                    <ComboBoxItem Content="{ui:Loc CurrentMailbox}" />
+                </ComboBox>
+            </Grid>
+
+            <!-- All / Unread + sort -->
+            <DockPanel Grid.Row="1" Margin="10,2,8,2">
+                <Button x:Name="SortButton" DockPanel.Dock="Right" Style="{StaticResource FlatButton}" Click="SortButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="SortText" Text="{ui:Loc ByDate}" />
+                        <TextBlock x:Name="SortArrow" Text="&#xE74B;" FontFamily="{StaticResource IconFont}" FontSize="10" Margin="6,0,0,0" VerticalAlignment="Center" />
+                    </StackPanel>
+                </Button>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="FilterAll" GroupName="flt" IsChecked="True" Checked="Filter_Checked" Tag="All" Cursor="Hand">
+                        <RadioButton.Template>
+                            <ControlTemplate TargetType="RadioButton">
+                                <Border Padding="2,4" Margin="0,0,14,0" Background="Transparent">
+                                    <StackPanel>
+                                        <TextBlock x:Name="T" Text="{ui:Loc All}" FontSize="13" Foreground="#605E5C" />
+                                        <Border x:Name="U" Height="2" Background="{StaticResource AccentBrush}" Margin="0,3,0,0" CornerRadius="1" Visibility="Hidden" />
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="T" Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                        <Setter TargetName="T" Property="FontWeight" Value="SemiBold" />
+                                        <Setter TargetName="U" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </RadioButton.Template>
+                    </RadioButton>
+                    <RadioButton x:Name="FilterUnread" GroupName="flt" Checked="Filter_Checked" Tag="Unread" Cursor="Hand">
+                        <RadioButton.Template>
+                            <ControlTemplate TargetType="RadioButton">
+                                <Border Padding="2,4" Background="Transparent">
+                                    <StackPanel>
+                                        <TextBlock x:Name="T" Text="{ui:Loc Unread}" FontSize="13" Foreground="#605E5C" />
+                                        <Border x:Name="U" Height="2" Background="{StaticResource AccentBrush}" Margin="0,3,0,0" CornerRadius="1" Visibility="Hidden" />
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter TargetName="T" Property="Foreground" Value="{StaticResource AccentBrush}" />
+                                        <Setter TargetName="T" Property="FontWeight" Value="SemiBold" />
+                                        <Setter TargetName="U" Property="Visibility" Value="Visible" />
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </RadioButton.Template>
+                    </RadioButton>
+                    <TextBlock x:Name="FilterBadge" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource AccentBrush}" FontSize="11" />
+                </StackPanel>
+            </DockPanel>
+
+            <ListBox x:Name="MessageList" Grid.Row="2" BorderThickness="0,1,0,0" BorderBrush="{StaticResource BorderBrush}"
+                     ItemContainerStyle="{StaticResource OutlookListItem}" ItemTemplate="{StaticResource MessageTemplate}"
+                     SelectionMode="Extended" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingPanel.IsVirtualizing="True" VirtualizingPanel.IsVirtualizingWhenGrouping="True" VirtualizingPanel.VirtualizationMode="Recycling"
+                     VirtualizingPanel.ScrollUnit="Pixel"
+                     SelectionChanged="MessageList_SelectionChanged" MouseDoubleClick="MessageList_MouseDoubleClick"
+                     PreviewMouseLeftButtonDown="MessageList_PreviewMouseLeftButtonDown" PreviewMouseMove="MessageList_PreviewMouseMove"
+                     ContextMenuOpening="MessageList_ContextMenuOpening" KeyDown="MessageList_KeyDown">
+                <ListBox.GroupStyle>
+                    <GroupStyle HeaderTemplate="{StaticResource GroupHeaderTemplate}" />
+                </ListBox.GroupStyle>
+                <ListBox.ContextMenu>
+                    <ContextMenu />
+                </ListBox.ContextMenu>
+            </ListBox>
+
+            <!-- Empty / loading -->
+            <TextBlock x:Name="EmptyText" Grid.Row="2" Text="{ui:Loc NothingToShow}" Foreground="#605E5C" HorizontalAlignment="Center" Margin="0,40,0,0" Visibility="Collapsed" TextWrapping="Wrap" />
+            <ProgressBar x:Name="LoadingBar" Grid.Row="2" Height="2" VerticalAlignment="Top" IsIndeterminate="True" Visibility="Collapsed" BorderThickness="0" Foreground="{StaticResource AccentBrush}" Background="Transparent" />
+        </Grid>
+
+        <GridSplitter x:Name="Splitter" Grid.Column="1" Style="{StaticResource GridSplitterV}" ResizeBehavior="PreviousAndNext" DragCompleted="Splitter_DragCompleted" />
+
+        <v:ReadingPane x:Name="Reading" Grid.Column="2" />
+    </Grid>
+</UserControl>

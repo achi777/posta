@@ -1,0 +1,23 @@
+bin/
+obj/
+.vs/
+*.user
+*.suo
+publish/
+*.zip
+artifacts/
+
+# Local account data and generated packages
+accounts.json
+settings.json
+Signatures/
+*.db
+*.db-*
+*.log
+.env
+.env.*
+*.pfx
+*.p12
+*.pem
+*.key
+Posta-win-x64/

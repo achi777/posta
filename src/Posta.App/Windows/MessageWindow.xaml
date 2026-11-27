@@ -1,0 +1,63 @@
+<Fluent:RibbonWindow x:Class="Posta.App.Windows.MessageWindow"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:Fluent="urn:fluent-ribbon"
+                     xmlns:ui="clr-namespace:Posta.App.Infrastructure"
+                     xmlns:v="clr-namespace:Posta.App.Views"
+                     Width="980" Height="760" MinWidth="560" MinHeight="400"
+                     FontFamily="Segoe UI, Sylfaen" FontSize="12" UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+                     WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Fluent:Ribbon CanCustomizeRibbon="False" CanCustomizeQuickAccessToolBar="False">
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage Header="{ui:Loc File}">
+                    <Fluent:BackstageTabControl>
+                        <Fluent:Button Header="{ui:Loc SaveAs}" Click="SaveAs_Click" />
+                        <Fluent:Button Header="{ui:Loc SaveAttachments}" Click="SaveAttachments_Click" />
+                        <Fluent:Button Header="{ui:Loc Print}" Click="Print_Click" />
+                        <Fluent:Button Header="{ui:Loc Close}" Click="Close_Click" />
+                    </Fluent:BackstageTabControl>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+            <Fluent:RibbonTabItem Header="{ui:Loc Message}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpDelete}">
+                    <Fluent:Button Header="{ui:Loc Ignore}" Icon="{ui:Glyph E8D8, Size=16}" SizeDefinition="Middle" Click="Ignore_Click" />
+                    <Fluent:DropDownButton Header="{ui:Loc Junk}" Icon="{ui:Glyph E8F8, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc BlockSender}" Click="Junk_Click" Tag="true" />
+                        <Fluent:MenuItem Header="{ui:Loc NotJunk}" Click="Junk_Click" Tag="false" />
+                    </Fluent:DropDownButton>
+                    <Fluent:Button Header="{ui:Loc Delete}" LargeIcon="{ui:Glyph E74D, Color=#424242}" SizeDefinition="Large" Click="Delete_Click" />
+                    <Fluent:Button Header="{ui:Loc Archive}" LargeIcon="{ui:Glyph E7B8, Color=#424242}" SizeDefinition="Large" Click="Archive_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpRespond}">
+                    <Fluent:Button Header="{ui:Loc Reply}" LargeIcon="{ui:Glyph E8CA, Color=#5C2E91}" SizeDefinition="Large" Click="Reply_Click" Tag="Reply" />
+                    <Fluent:Button Header="{ui:Loc ReplyAll}" LargeIcon="{ui:Glyph E8C2, Color=#5C2E91}" SizeDefinition="Large" Click="Reply_Click" Tag="ReplyAll" />
+                    <Fluent:Button Header="{ui:Loc Forward}" LargeIcon="{ui:Glyph E89C, Color=#0F6CBD}" SizeDefinition="Large" Click="Reply_Click" Tag="Forward" />
+                    <Fluent:Button Header="{ui:Loc Meeting}" Icon="{ui:Glyph E787, Size=16}" SizeDefinition="Middle" Click="Meeting_Click" />
+                    <Fluent:Button Header="{ui:Loc ForwardAsAttachment}" Icon="{ui:Glyph E723, Size=16}" SizeDefinition="Middle" Click="ForwardAttach_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpMove}">
+                    <Fluent:Button Header="{ui:Loc MoveToFolder}" LargeIcon="{ui:Glyph E8DE, Color=#C19C00}" SizeDefinition="Large" Click="Move_Click" />
+                    <Fluent:Button Header="{ui:Loc CreateRule}" Icon="{ui:Glyph E8CB, Size=16}" SizeDefinition="Middle" Click="Rule_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpTags}">
+                    <Fluent:Button Header="{ui:Loc MarkAsUnread}" LargeIcon="{ui:Glyph E715, Color=#424242}" SizeDefinition="Large" Click="Unread_Click" />
+                    <Fluent:DropDownButton x:Name="CategorizeBtn" Header="{ui:Loc Categorize}" LargeIcon="{ui:Glyph E8EC, Color=#C4314B}" SizeDefinition="Large" DropDownOpened="Categorize_Opened" />
+                    <Fluent:DropDownButton Header="{ui:Loc FollowUp}" LargeIcon="{ui:Glyph E7C1, Color=#D13438}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="{ui:Loc FlagToday}" Click="Flag_Click" Tag="flag" />
+                        <Fluent:MenuItem Header="{ui:Loc MarkComplete}" Click="Flag_Click" Tag="complete" />
+                        <Fluent:MenuItem Header="{ui:Loc ClearFlag}" Click="Flag_Click" Tag="clear" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpZoom}">
+                    <Fluent:Button Header="{ui:Loc Zoom}" LargeIcon="{ui:Glyph E71E, Color=#424242}" SizeDefinition="Large" Click="Zoom_Click" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+        <v:ReadingPane x:Name="Pane" Grid.Row="1" />
+    </Grid>
+</Fluent:RibbonWindow>

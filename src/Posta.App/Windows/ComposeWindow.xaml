@@ -1,0 +1,252 @@
+<Fluent:RibbonWindow x:Class="Posta.App.Windows.ComposeWindow"
+                     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:Fluent="urn:fluent-ribbon"
+                     xmlns:ui="clr-namespace:Posta.App.Infrastructure"
+                     xmlns:c="clr-namespace:Posta.App.Controls"
+                     Title="Untitled - Message" Width="1020" Height="760" MinWidth="640" MinHeight="420"
+                     FontFamily="Segoe UI, Sylfaen" FontSize="12" UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+                     WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Fluent:Ribbon x:Name="Ribbon" CanCustomizeRibbon="False" CanCustomizeQuickAccessToolBar="False">
+            <Fluent:Ribbon.QuickAccessItems>
+                <Fluent:QuickAccessMenuItem IsChecked="True">
+                    <Fluent:Button Header="{ui:Loc SaveDraft}" Icon="{ui:Glyph E74E, Size=16, Color=#FFFFFF}" Click="Save_Click" />
+                </Fluent:QuickAccessMenuItem>
+                <Fluent:QuickAccessMenuItem IsChecked="True">
+                    <Fluent:Button Header="{ui:Loc Undo}" Icon="{ui:Glyph E7A7, Size=16, Color=#FFFFFF}" Click="Exec_Click" Tag="undo" />
+                </Fluent:QuickAccessMenuItem>
+                <Fluent:QuickAccessMenuItem IsChecked="True">
+                    <Fluent:Button Header="{ui:Loc Redo}" Icon="{ui:Glyph E7A6, Size=16, Color=#FFFFFF}" Click="Exec_Click" Tag="redo" />
+                </Fluent:QuickAccessMenuItem>
+            </Fluent:Ribbon.QuickAccessItems>
+
+            <Fluent:Ribbon.Menu>
+                <Fluent:Backstage Header="{ui:Loc File}">
+                    <Fluent:BackstageTabControl>
+                        <Fluent:Button Header="{ui:Loc SaveDraft}" Click="Save_Click" />
+                        <Fluent:Button Header="{ui:Loc Print}" Click="Print_Click" />
+                        <Fluent:Button Header="{ui:Loc Discard}" Click="Discard_Click" />
+                        <Fluent:Button Header="{ui:Loc Close}" Click="CloseWindow_Click" />
+                    </Fluent:BackstageTabControl>
+                </Fluent:Backstage>
+            </Fluent:Ribbon.Menu>
+
+            <!-- MESSAGE -->
+            <Fluent:RibbonTabItem Header="{ui:Loc Message}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpClipboard}">
+                    <Fluent:Button Header="{ui:Loc Paste}" LargeIcon="{ui:Glyph E77F, Color=#424242}" Icon="{ui:Glyph E77F, Size=16}" SizeDefinition="Large" Click="Exec_Click" Tag="paste" />
+                    <Fluent:Button Header="{ui:Loc Cut}" Icon="{ui:Glyph E8C6, Size=16}" SizeDefinition="Middle" Click="Exec_Click" Tag="cut" />
+                    <Fluent:Button Header="{ui:Loc Copy}" Icon="{ui:Glyph E8C8, Size=16}" SizeDefinition="Middle" Click="Exec_Click" Tag="copy" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpBasicText}">
+                    <Fluent:ComboBox x:Name="FontBox" Width="140" IsEditable="True" SelectionChanged="FontBox_SelectionChanged" />
+                    <Fluent:ComboBox x:Name="SizeBox" Width="48" IsEditable="True" SelectionChanged="SizeBox_SelectionChanged" />
+                    <Fluent:ToggleButton x:Name="BoldBtn" ToolTip="{ui:Loc Bold}" Icon="{ui:Glyph E8DD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="bold" />
+                    <Fluent:ToggleButton x:Name="ItalicBtn" ToolTip="{ui:Loc Italic}" Icon="{ui:Glyph E8DB, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="italic" />
+                    <Fluent:ToggleButton x:Name="UnderlineBtn" ToolTip="{ui:Loc UnderlineTip}" Icon="{ui:Glyph E8DC, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="underline" />
+                    <Fluent:Button ToolTip="{ui:Loc TextHighlight}" Icon="{ui:Glyph E7E6, Size=16, Color=#C19C00}" SizeDefinition="Small" Click="Highlight_Click" />
+                    <Fluent:Button ToolTip="{ui:Loc FontColor}" Icon="{ui:Glyph E8D3, Size=16, Color=#C4314B}" SizeDefinition="Small" Click="FontColor_Click" />
+                    <Fluent:ToggleButton x:Name="BulletsBtn" ToolTip="{ui:Loc Bullets}" Icon="{ui:Glyph E8FD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="insertUnorderedList" />
+                    <Fluent:ToggleButton x:Name="NumberingBtn" ToolTip="{ui:Loc Numbering}" Icon="{ui:Glyph E9D5, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="insertOrderedList" />
+                    <Fluent:Button ToolTip="{ui:Loc DecreaseIndent}" Icon="{ui:Glyph E72B, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="outdent" />
+                    <Fluent:Button ToolTip="{ui:Loc IncreaseIndent}" Icon="{ui:Glyph E72A, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="indent" />
+                    <Fluent:ToggleButton x:Name="AlignLeftBtn" ToolTip="{ui:Loc AlignLeft}" Icon="{ui:Glyph E8E4, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyLeft" />
+                    <Fluent:ToggleButton x:Name="AlignCenterBtn" ToolTip="{ui:Loc Center}" Icon="{ui:Glyph E8E3, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyCenter" />
+                    <Fluent:ToggleButton x:Name="AlignRightBtn" ToolTip="{ui:Loc AlignRight}" Icon="{ui:Glyph E8E2, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyRight" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpNames}">
+                    <Fluent:Button Header="{ui:Loc AddressBook}" LargeIcon="{ui:Glyph E779, Color=#0F6CBD}" Icon="{ui:Glyph E779, Size=16}" SizeDefinition="Large" Click="AddressBook_Click" />
+                    <Fluent:Button Header="{ui:Loc CheckNames}" LargeIcon="{ui:Glyph E8FA, Color=#424242}" Icon="{ui:Glyph E8FA, Size=16}" SizeDefinition="Large" Click="CheckNames_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpInclude}">
+                    <Fluent:Button Header="{ui:Loc AttachFile}" LargeIcon="{ui:Glyph E723, Color=#424242}" Icon="{ui:Glyph E723, Size=16}" SizeDefinition="Large" Click="AttachFile_Click" />
+                    <Fluent:Button Header="{ui:Loc Link}" LargeIcon="{ui:Glyph E71B, Color=#0F6CBD}" Icon="{ui:Glyph E71B, Size=16}" SizeDefinition="Large" Click="Link_Click" />
+                    <Fluent:DropDownButton x:Name="SignatureDropDown" Header="{ui:Loc Signature}" LargeIcon="{ui:Glyph E70F, Color=#0F6CBD}" Icon="{ui:Glyph E70F, Size=16}" SizeDefinition="Large" DropDownOpened="SignatureDropDown_Opened" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpTagsCompose}">
+                    <Fluent:DropDownButton x:Name="FollowUpBtn" Header="{ui:Loc FollowUp}" Icon="{ui:Glyph E7C1, Size=16, Color=#D13438}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc FlagToday}" Click="FlagCompose_Click" Tag="flag" />
+                        <Fluent:MenuItem Header="{ui:Loc ClearFlag}" Click="FlagCompose_Click" Tag="clear" />
+                    </Fluent:DropDownButton>
+                    <Fluent:ToggleButton x:Name="HighImpBtn" Header="{ui:Loc HighImportance}" Icon="{ui:Glyph E8C9, Size=16, Color=#C4314B}" SizeDefinition="Middle" Click="Importance_Click" Tag="High" />
+                    <Fluent:ToggleButton x:Name="LowImpBtn" Header="{ui:Loc LowImportance}" Icon="{ui:Glyph E74B, Size=16, Color=#0F6CBD}" SizeDefinition="Middle" Click="Importance_Click" Tag="Low" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- INSERT -->
+            <Fluent:RibbonTabItem Header="{ui:Loc Insert}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpInclude}">
+                    <Fluent:Button Header="{ui:Loc AttachFile}" LargeIcon="{ui:Glyph E723, Color=#424242}" Icon="{ui:Glyph E723, Size=16}" SizeDefinition="Large" Click="AttachFile_Click" />
+                    <Fluent:DropDownButton x:Name="SignatureDropDown2" Header="{ui:Loc Signature}" LargeIcon="{ui:Glyph E70F, Color=#0F6CBD}" Icon="{ui:Glyph E70F, Size=16}" SizeDefinition="Large" DropDownOpened="SignatureDropDown_Opened" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpTables}">
+                    <Fluent:Button Header="{ui:Loc Table}" LargeIcon="{ui:Glyph E8A9, Color=#424242}" Icon="{ui:Glyph E8A9, Size=16}" SizeDefinition="Large" Click="Table_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpIllustrations}">
+                    <Fluent:Button Header="{ui:Loc Pictures}" LargeIcon="{ui:Glyph E8B9, Color=#8764B8}" Icon="{ui:Glyph E8B9, Size=16}" SizeDefinition="Large" Click="Picture_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpLinks}">
+                    <Fluent:Button Header="{ui:Loc Link}" LargeIcon="{ui:Glyph E71B, Color=#0F6CBD}" Icon="{ui:Glyph E71B, Size=16}" SizeDefinition="Large" Click="Link_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpText}">
+                    <Fluent:Button Header="{ui:Loc HorizontalLine}" Icon="{ui:Glyph E738, Size=16}" SizeDefinition="Middle" Click="Hr_Click" />
+                    <Fluent:Button Header="{ui:Loc DateTime}" Icon="{ui:Glyph E823, Size=16}" SizeDefinition="Middle" Click="DateTime_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpSymbols}">
+                    <Fluent:DropDownButton Header="{ui:Loc Emoji}" LargeIcon="{ui:Glyph E76E, Color=#C19C00}" SizeDefinition="Large">
+                        <Fluent:MenuItem Header="😀  🙂  👍  🙏  🎉" Click="Emoji_Click" />
+                        <Fluent:MenuItem Header="✔  ✖  ⚠  ★  ➜" Click="Emoji_Click" />
+                        <Fluent:MenuItem Header="€  ₾  $  ©  ®  ™  °  ±  №" Click="Emoji_Click" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- OPTIONS -->
+            <Fluent:RibbonTabItem Header="{ui:Loc OptionsTab}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpShowFields}">
+                    <Fluent:ToggleButton x:Name="ShowBccBtn" Header="{ui:Loc Bcc}" LargeIcon="{ui:Glyph E8C4, Color=#424242}" SizeDefinition="Large" Click="ShowBcc_Click" />
+                    <Fluent:ToggleButton x:Name="ShowFromBtn" Header="{ui:Loc FromBtn}" LargeIcon="{ui:Glyph E77B, Color=#424242}" SizeDefinition="Large" Click="ShowFrom_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpFormat}">
+                    <Fluent:ToggleButton x:Name="HtmlBtn" GroupName="fmt" Header="{ui:Loc HTML}" Icon="{ui:Glyph E8A5, Size=16}" SizeDefinition="Middle" IsChecked="True" Click="Format_Click" Tag="html" />
+                    <Fluent:ToggleButton x:Name="PlainBtn" GroupName="fmt" Header="{ui:Loc PlainText}" Icon="{ui:Glyph E8D2, Size=16}" SizeDefinition="Middle" Click="Format_Click" Tag="plain" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpTracking}">
+                    <Fluent:CheckBox x:Name="DeliveryReceiptBox" Header="{ui:Loc RequestDeliveryReceipt}" />
+                    <Fluent:CheckBox x:Name="ReadReceiptBox" Header="{ui:Loc RequestReadReceipt}" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpMoreOptions}">
+                    <Fluent:Button Header="{ui:Loc DelayDelivery}" LargeIcon="{ui:Glyph E823, Color=#424242}" SizeDefinition="Large" Click="DelayDelivery_Click" />
+                    <Fluent:ToggleButton x:Name="NoSaveSentBtn" Header="{ui:Loc DoNotSaveSent}" Icon="{ui:Glyph E74E, Size=16}" SizeDefinition="Middle" />
+                    <Fluent:DropDownButton x:Name="SensitivityBtn" Header="{ui:Loc Sensitivity}" Icon="{ui:Glyph E72E, Size=16}" SizeDefinition="Middle">
+                        <Fluent:MenuItem Header="{ui:Loc SensNormal}" Click="Sensitivity_Click" Tag="Normal" />
+                        <Fluent:MenuItem Header="{ui:Loc SensPersonal}" Click="Sensitivity_Click" Tag="Personal" />
+                        <Fluent:MenuItem Header="{ui:Loc SensPrivate}" Click="Sensitivity_Click" Tag="Private" />
+                        <Fluent:MenuItem Header="{ui:Loc SensConfidential}" Click="Sensitivity_Click" Tag="Confidential" />
+                    </Fluent:DropDownButton>
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- FORMAT TEXT -->
+            <Fluent:RibbonTabItem Header="{ui:Loc FormatText}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpFormat}">
+                    <Fluent:ToggleButton GroupName="fmt2" Header="{ui:Loc HTML}" Icon="{ui:Glyph E8A5, Size=16}" SizeDefinition="Middle" IsChecked="{Binding IsChecked, ElementName=HtmlBtn}" Click="Format_Click" Tag="html" />
+                    <Fluent:ToggleButton GroupName="fmt2" Header="{ui:Loc PlainText}" Icon="{ui:Glyph E8D2, Size=16}" SizeDefinition="Middle" IsChecked="{Binding IsChecked, ElementName=PlainBtn}" Click="Format_Click" Tag="plain" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpFont}">
+                    <Fluent:Button ToolTip="{ui:Loc Bold}" Icon="{ui:Glyph E8DD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="bold" />
+                    <Fluent:Button ToolTip="{ui:Loc Italic}" Icon="{ui:Glyph E8DB, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="italic" />
+                    <Fluent:Button ToolTip="{ui:Loc UnderlineTip}" Icon="{ui:Glyph E8DC, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="underline" />
+                    <Fluent:Button ToolTip="{ui:Loc Strikethrough}" Icon="{ui:Glyph E8D2, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="strikeThrough" Header="abc" />
+                    <Fluent:Button ToolTip="{ui:Loc Subscript}" Header="x₂" SizeDefinition="Small" Click="Exec_Click" Tag="subscript" />
+                    <Fluent:Button ToolTip="{ui:Loc Superscript}" Header="x²" SizeDefinition="Small" Click="Exec_Click" Tag="superscript" />
+                    <Fluent:Button ToolTip="{ui:Loc IncreaseFont}" Icon="{ui:Glyph E8E8, Size=16}" SizeDefinition="Small" Click="GrowFont_Click" Tag="up" />
+                    <Fluent:Button ToolTip="{ui:Loc DecreaseFont}" Icon="{ui:Glyph E8E7, Size=16}" SizeDefinition="Small" Click="GrowFont_Click" Tag="down" />
+                    <Fluent:Button ToolTip="{ui:Loc ClearFormatting}" Icon="{ui:Glyph E894, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="removeFormat" />
+                    <Fluent:Button ToolTip="{ui:Loc TextHighlight}" Icon="{ui:Glyph E7E6, Size=16, Color=#C19C00}" SizeDefinition="Small" Click="Highlight_Click" />
+                    <Fluent:Button ToolTip="{ui:Loc FontColor}" Icon="{ui:Glyph E8D3, Size=16, Color=#C4314B}" SizeDefinition="Small" Click="FontColor_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpParagraph}">
+                    <Fluent:Button ToolTip="{ui:Loc Bullets}" Icon="{ui:Glyph E8FD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="insertUnorderedList" />
+                    <Fluent:Button ToolTip="{ui:Loc Numbering}" Icon="{ui:Glyph E9D5, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="insertOrderedList" />
+                    <Fluent:Button ToolTip="{ui:Loc DecreaseIndent}" Icon="{ui:Glyph E72B, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="outdent" />
+                    <Fluent:Button ToolTip="{ui:Loc IncreaseIndent}" Icon="{ui:Glyph E72A, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="indent" />
+                    <Fluent:Button ToolTip="{ui:Loc AlignLeft}" Icon="{ui:Glyph E8E4, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyLeft" />
+                    <Fluent:Button ToolTip="{ui:Loc Center}" Icon="{ui:Glyph E8E3, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyCenter" />
+                    <Fluent:Button ToolTip="{ui:Loc AlignRight}" Icon="{ui:Glyph E8E2, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyRight" />
+                    <Fluent:Button ToolTip="{ui:Loc Justify}" Icon="{ui:Glyph E8FD, Size=16}" SizeDefinition="Small" Click="Exec_Click" Tag="justifyFull" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpStyles}">
+                    <Fluent:Button Header="{ui:Loc NormalStyle}" SizeDefinition="Middle" Click="Style_Click" Tag="div" />
+                    <Fluent:Button Header="{ui:Loc Heading1}" SizeDefinition="Middle" Click="Style_Click" Tag="h1" />
+                    <Fluent:Button Header="{ui:Loc Heading2}" SizeDefinition="Middle" Click="Style_Click" Tag="h2" />
+                    <Fluent:Button Header="{ui:Loc Quote}" SizeDefinition="Middle" Click="Style_Click" Tag="blockquote" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpEditing}">
+                    <Fluent:Button Header="{ui:Loc SelectAll}" Icon="{ui:Glyph E8B3, Size=16}" SizeDefinition="Middle" Click="Exec_Click" Tag="selectAll" />
+                    <Fluent:Button Header="{ui:Loc Undo}" Icon="{ui:Glyph E7A7, Size=16}" SizeDefinition="Middle" Click="Exec_Click" Tag="undo" />
+                    <Fluent:Button Header="{ui:Loc Redo}" Icon="{ui:Glyph E7A6, Size=16}" SizeDefinition="Middle" Click="Exec_Click" Tag="redo" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+
+            <!-- REVIEW -->
+            <Fluent:RibbonTabItem Header="{ui:Loc Review}">
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpProofing}">
+                    <Fluent:Button Header="{ui:Loc Spelling}" LargeIcon="{ui:Glyph E8C1, Color=#424242}" SizeDefinition="Large" Click="Spelling_Click" />
+                </Fluent:RibbonGroupBox>
+                <Fluent:RibbonGroupBox Header="{ui:Loc GrpZoom}">
+                    <Fluent:Button Header="{ui:Loc Zoom}" LargeIcon="{ui:Glyph E71E, Color=#424242}" SizeDefinition="Large" Click="Zoom_Click" />
+                </Fluent:RibbonGroupBox>
+            </Fluent:RibbonTabItem>
+        </Fluent:Ribbon>
+
+        <!-- Info bar -->
+        <Border x:Name="InfoBar" Grid.Row="1" Background="{StaticResource InfoBarBrush}" Padding="12,4" Visibility="Collapsed">
+            <TextBlock x:Name="InfoText" Foreground="#424242" />
+        </Border>
+
+        <!-- Header fields -->
+        <Grid Grid.Row="2" Margin="10,10,14,4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Button x:Name="SendButton" Grid.RowSpan="3" Width="72" Height="72" Margin="0,0,10,0" VerticalAlignment="Top" Click="Send_Click"
+                    Style="{StaticResource FlatButton}" BorderBrush="#C8C6C4" ToolTip="Ctrl+Enter">
+                <StackPanel>
+                    <TextBlock Text="&#xE724;" FontFamily="{StaticResource IconFont}" FontSize="26" Foreground="{StaticResource AccentBrush}" HorizontalAlignment="Center" />
+                    <TextBlock Text="{ui:Loc Send}" HorizontalAlignment="Center" Margin="0,4,0,0" />
+                </StackPanel>
+            </Button>
+
+            <!-- From -->
+            <Button x:Name="FromButton" Grid.Column="1" Style="{StaticResource DialogButton}" MinWidth="76" Margin="0,0,8,6" Click="From_Click" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="{ui:Loc FromBtn}" />
+                    <TextBlock Text="&#xE70D;" FontFamily="{StaticResource IconFont}" FontSize="9" Margin="6,0,0,0" VerticalAlignment="Center" />
+                </StackPanel>
+            </Button>
+            <TextBlock x:Name="FromText" Grid.Column="2" VerticalAlignment="Center" Margin="2,0,0,6" Visibility="Collapsed" />
+
+            <Button Grid.Row="1" Grid.Column="1" Style="{StaticResource DialogButton}" MinWidth="76" Margin="0,0,8,4" Click="PickRecipients_Click" Tag="To" Content="{ui:Loc To}" />
+            <c:RecipientBox x:Name="ToBox" Grid.Row="1" Grid.Column="2" Margin="0,0,0,4" />
+            <Button Grid.Row="2" Grid.Column="1" Style="{StaticResource DialogButton}" MinWidth="76" Margin="0,0,8,4" Click="PickRecipients_Click" Tag="Cc" Content="{ui:Loc Cc}" />
+            <c:RecipientBox x:Name="CcBox" Grid.Row="2" Grid.Column="2" Margin="0,0,0,4" />
+            <Button x:Name="BccButton" Grid.Row="3" Grid.Column="1" Style="{StaticResource DialogButton}" MinWidth="76" Margin="0,0,8,4" Click="PickRecipients_Click" Tag="Bcc" Content="{ui:Loc Bcc}" Visibility="Collapsed" />
+            <c:RecipientBox x:Name="BccBox" Grid.Row="3" Grid.Column="2" Margin="0,0,0,4" Visibility="Collapsed" />
+
+            <TextBlock Grid.Row="4" Grid.Column="1" Text="{ui:Loc Subject}" VerticalAlignment="Center" Margin="4,0,8,0" />
+            <TextBox x:Name="SubjectBox" Grid.Row="4" Grid.Column="2" Height="26" VerticalContentAlignment="Center" BorderThickness="0,0,0,1" BorderBrush="#C8C6C4" TextChanged="SubjectBox_TextChanged" />
+
+            <ItemsControl x:Name="AttachmentsList" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" Margin="0,6,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </Grid>
+
+        <Border Grid.Row="3" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,1,0,0" Margin="0,4,0,0" AllowDrop="True" Drop="Body_Drop" DragOver="Body_DragOver">
+            <c:HtmlEditor x:Name="Editor" />
+        </Border>
+    </Grid>
+</Fluent:RibbonWindow>

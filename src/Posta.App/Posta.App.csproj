@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\Posta.Core\Posta.Core.csproj" />
+    <ProjectReference Include="..\Posta.Exchange\Posta.Exchange.csproj" />
+    <ProjectReference Include="..\Posta.Outlook\Posta.Outlook.csproj" />
+    <ProjectReference Include="..\Posta.Mapi\Posta.Mapi.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="Fluent.Ribbon" Version="11.0.2" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4314.35" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Assets\posta.ico</ApplicationIcon>
+    <AssemblyTitle>ფოსტა (Posta)</AssemblyTitle>
+    <Product>ფოსტა (Posta)</Product>
+    <Authors>Archil Odishelidze</Authors>
+    <Company>Archil Odishelidze</Company>
+    <Copyright>© 2026 Archil Odishelidze</Copyright>
+    <Description>Desktop mail client for Microsoft Exchange</Description>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\posta.ico" />
+    <Resource Include="Assets\posta-256.png" />
+    <Content Include="../../THIRD-PARTY-NOTICES.md" Link="THIRD-PARTY-NOTICES.md" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../third-party/mapi-client-rs/LICENSE-MIT.txt" Link="licenses/mapi-client-rs-MIT.txt" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="../../third-party/mimekit/LICENSE-MIT.txt" Link="licenses/MimeKit-MIT.txt" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

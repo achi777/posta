@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup><ProjectReference Include="../Posta.Core/Posta.Core.csproj" /></ItemGroup>
+  <ItemGroup><PackageReference Include="MimeKit.Core" Version="5.0.0" /></ItemGroup>
+</Project>
