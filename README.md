@@ -4,6 +4,8 @@ Windows-ის საფოსტო კლიენტი Microsoft Exchange-�
 
 Posta is a Windows desktop mail client for Microsoft Exchange. The interface is available in Georgian (default) and English.
 
+**Related links:** [DBTool](https://github.com/achi777/db-tool) · [CodeMake](https://codemake.co/)
+
 ## ფუნქციები / Features
 
 - ფოსტა და რამდენიმე ანგარიში / Mail, search, folders, drafts, signatures and multiple accounts
